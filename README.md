@@ -19,3 +19,7 @@ This page is used as a lightweight service landing page for communities that nee
 - GodForge
 - SAL Draft League
 - ForgeLens
+
+## Portfolio Refactor Planning
+
+The next version of this site is planned as a professional portfolio for Dustin Nieves / Diese. Architecture and product decisions for the refactor are documented in [`docs/adr`](./docs/adr), with a concise implementation brief in [`docs/portfolio-refactor-brief.md`](./docs/portfolio-refactor-brief.md).
