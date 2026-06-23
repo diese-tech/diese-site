@@ -1,4 +1,127 @@
 import type { Metadata } from 'next';
-export const metadata: Metadata = { title: 'Discord automation services', description: 'Discord automation and setup help for gaming communities, streamers, amateur leagues, and online groups.' };
-const offerings = [ ['Server Cleanup', 'Clean up messy roles, channels, permissions, categories, and onboarding so your server feels easier to use.', 'Starting at $75'], ['Automation Setup', 'Set up tickets, welcome flows, announcements, event reminders, role menus, moderation helpers, and repeatable admin workflows.', 'Starting at $150'], ['Mini Custom Bot', 'Build a focused Discord bot feature, like a randomizer, signup tracker, match helper, leaderboard, or command workflow.', 'Starting at $250'] ];
-export default function DiscordServices() { return <main className="mx-auto max-w-6xl px-5 py-20"><p className="kicker">Discord setup & automation for gaming communities</p><h1 className="mt-4 max-w-4xl text-5xl font-black">I help Discord communities stop doing admin work manually.</h1><p className="mt-5 max-w-3xl text-lg text-slate-600 dark:text-slate-300">I set up clean Discord servers, roles, channels, onboarding, ticket systems, announcements, and lightweight custom bot workflows for gaming groups, streamers, leagues, and online communities.</p><div className="mt-8 flex gap-3"><a className="btn-primary" href="mailto:nievesdustinl@yahoo.com">Request a quick audit</a><a className="btn-secondary" href="#examples">View examples</a></div><section className="mt-16"><h2 className="text-3xl font-black">What I can help with</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{offerings.map(([title, body, price]) => <article className="surface rounded-3xl p-6" key={title}><h3 className="text-xl font-black">{title}</h3><p className="mt-3 text-slate-600 dark:text-slate-300">{body}</p><p className="mt-4 font-bold text-accent dark:text-cyan">{price}</p></article>)}</div></section><section id="examples" className="mt-16"><h2 className="text-3xl font-black">Example projects</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{['GodForge — a Discord bot for gaming communities with randomization, draft helpers, role-based commands, and match support.', 'League Draft Tools — draft and league management experiments for amateur competitive gaming communities.', 'ForgeLens — match and stat tracking for Smite 2 communities managing results, seasons, and player data.'].map(item => <article className="surface rounded-3xl border-l-4 border-l-accent p-6 dark:border-l-cyan" key={item}>{item}</article>)}</div></section><section className="surface mt-16 rounded-3xl p-8"><h2 className="text-3xl font-black">Want a quick Discord audit?</h2><p className="mt-4 text-slate-600 dark:text-slate-300">Send me your goal, what feels messy, and what you wish your server or bot could handle automatically. I’ll recommend the simplest fix first.</p><a className="btn-primary mt-6 inline-flex" href="mailto:nievesdustinl@yahoo.com">Contact me</a></section></main>; }
+
+export const metadata: Metadata = {
+  title: 'Discord automation services',
+  description:
+    'Discord automation and setup help for gaming communities, streamers, amateur leagues, and online groups.',
+};
+
+const offerings = [
+  [
+    'Server Cleanup',
+    'Clean up messy roles, channels, permissions, categories, and onboarding so your server feels easier to use.',
+    'Starting at $75',
+  ],
+  [
+    'Automation Setup',
+    'Set up tickets, welcome flows, announcements, event reminders, role menus, moderation helpers, and repeatable admin workflows.',
+    'Starting at $150',
+  ],
+  [
+    'Mini Custom Bot',
+    'Build a focused Discord bot feature — a randomizer, signup tracker, match helper, leaderboard, or command workflow.',
+    'Starting at $250',
+  ],
+];
+
+const examples = [
+  'GodForge — a Discord bot for gaming communities with randomization, draft helpers, role-based commands, and match support.',
+  'League Draft Tools — draft and league management experiments for amateur competitive gaming communities.',
+  'ForgeLens — match and stat tracking for Smite 2 communities managing results, seasons, and player data.',
+];
+
+export default function DiscordServices() {
+  return (
+    <main className="mx-auto max-w-content px-6 md:px-10 py-12 md:py-16">
+      {/* Header */}
+      <div className="border-b border-rule-strong pb-12 mb-12">
+        <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-signal mb-5">
+          Services · Discord
+        </div>
+        <h1 className="font-grotesk font-semibold text-[28px] md:text-[34px] tracking-[-0.015em] leading-[1.1] text-ink mb-6 max-w-[28ch]">
+          I help Discord communities stop doing admin work manually.
+        </h1>
+        <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch] mb-8">
+          I set up clean Discord servers, roles, channels, onboarding, ticket systems, announcements,
+          and lightweight custom bot workflows for gaming groups, streamers, leagues, and online
+          communities.
+        </p>
+        <div className="flex flex-wrap gap-5 font-mono text-xs tracking-[0.06em] uppercase">
+          <a
+            href="mailto:nievesdustinl@yahoo.com"
+            className="text-signal border-b-2 border-signal pb-px"
+          >
+            Request a quick audit
+          </a>
+          <a
+            href="#examples"
+            className="text-ink-muted border-b border-rule pb-px hover:text-signal hover:border-signal transition-colors duration-[120ms]"
+          >
+            View examples
+          </a>
+        </div>
+      </div>
+
+      {/* Offerings */}
+      <section className="mb-16">
+        <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-6">
+          What I can help with
+        </div>
+        <div className="border-t border-rule">
+          {offerings.map(([title, body, price]) => (
+            <div
+              key={title}
+              className="grid md:grid-cols-[200px_1fr_120px] gap-4 py-6 border-b border-rule items-start"
+            >
+              <div className="font-grotesk font-semibold text-[18px] text-ink">{title}</div>
+              <p className="font-sans text-[15px] leading-[1.6] text-ink-muted">{body}</p>
+              <div className="font-mono text-xs tracking-[0.04em] text-signal md:text-right">
+                {price}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Examples */}
+      <section id="examples" className="mb-16">
+        <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-6">
+          Example projects
+        </div>
+        <div className="flex flex-col border-t border-rule">
+          {examples.map((item, i) => (
+            <div
+              key={i}
+              className="flex gap-5 py-5 border-b border-rule last:border-b-0 items-start"
+            >
+              <span className="font-mono text-[11px] text-signal flex-none w-6 pt-0.5">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className="font-sans text-[15px] leading-[1.55] text-ink-muted">{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border border-rule bg-paper-panel p-7 md:p-10">
+        <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-4">
+          Quick audit
+        </div>
+        <h2 className="font-grotesk font-semibold text-[22px] md:text-[26px] tracking-[-0.01em] text-ink mb-4">
+          Want a quick Discord audit?
+        </h2>
+        <p className="font-sans text-base leading-[1.6] text-ink-muted max-w-[56ch] mb-7">
+          Send me your goal, what feels messy, and what you wish your server or bot could handle
+          automatically. I'll recommend the simplest fix first.
+        </p>
+        <a
+          href="mailto:nievesdustinl@yahoo.com"
+          className="font-mono text-xs tracking-[0.06em] uppercase text-signal border-b-2 border-signal pb-px"
+        >
+          Contact me →
+        </a>
+      </section>
+    </main>
+  );
+}

@@ -2,12 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: dark; }
-html { scroll-behavior: smooth; }
-body { @apply bg-cloud text-slate-900 antialiased dark:bg-ink dark:text-slate-100; }
-::selection { @apply bg-accent text-white; }
-.surface { @apply border border-slate-200/70 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur dark:border-white/10 dark:bg-white/[0.06] dark:shadow-black/20; }
-.kicker { @apply text-sm font-semibold uppercase tracking-[0.25em] text-accent dark:text-cyan; }
-.btn-primary { @apply rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-accent dark:bg-white dark:text-ink dark:hover:bg-cyan; }
-.btn-secondary { @apply rounded-full border border-slate-300 px-5 py-3 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-accent dark:border-white/15 dark:text-white dark:hover:border-cyan; }
-@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+}
+
+::selection {
+  background: #1b1a17;
+  color: #f6f4ef;
+}
+
+/* Ledger row hover */
+.ledger-row {
+  @apply transition-colors duration-[120ms] ease-out;
+}
+.ledger-row:hover {
+  @apply bg-paper-panel;
+}
+.ledger-row:hover .ledger-ref {
+  @apply text-signal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
