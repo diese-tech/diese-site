@@ -113,7 +113,7 @@ export default function DiscordServices() {
         </h2>
         <p className="font-sans text-base leading-[1.6] text-ink-muted max-w-[56ch] mb-7">
           Send me your goal, what feels messy, and what you wish your server or bot could handle
-          automatically. I'll recommend the simplest fix first.
+          automatically. I&apos;ll recommend the simplest fix first.
         </p>
         <a
           href="mailto:nievesdustinl@yahoo.com"
