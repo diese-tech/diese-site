@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import { BuilderConsole } from '@/components/builder-console';
 import { PremiumEntrypoint } from '@/components/premium-entrypoint';
+import { Reveal } from '@/components/reveal';
 import { allProjects, featuredProjects } from '@/content/projects';
 import { site } from '@/content/site';
 
@@ -18,18 +20,21 @@ export default function Home() {
           </div>
 
           {/* Heading block */}
-          <div className="py-14 md:py-16">
-            <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-signal mb-6">
-              Dustin Nieves · Portfolio
+          <div className="py-14 md:py-16 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
+            <div>
+              <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-signal mb-6">
+                Dustin Nieves · Portfolio
+              </div>
+              <h1 className="font-grotesk font-semibold text-[28px] md:text-[34px] tracking-[-0.015em] leading-[1.1] text-ink mb-6 max-w-[26ch]">
+                Software for the systems that actually run.
+              </h1>
+              <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch]">
+                Operations Analyst background, software developer in practice. I build tools,
+                dashboards, and SaaS products around real business workflows — the unglamorous
+                plumbing that keeps teams running.
+              </p>
             </div>
-            <h1 className="font-grotesk font-semibold text-[28px] md:text-[34px] tracking-[-0.015em] leading-[1.1] text-ink mb-6 max-w-[26ch]">
-              Software for the systems that actually run.
-            </h1>
-            <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch]">
-              Operations Analyst background, software developer in practice. I build tools,
-              dashboards, and SaaS products around real business workflows — the unglamorous
-              plumbing that keeps teams running.
-            </p>
+            <BuilderConsole />
           </div>
 
           {/* Metadata strip */}
@@ -64,7 +69,8 @@ export default function Home() {
 
       {/* ===== FEATURED WORK — PREMIUM ENTRYPOINT ===== */}
       <section id="work" className="border-b border-rule-strong">
-        <PremiumEntrypoint
+        <Reveal>
+          <PremiumEntrypoint
           kicker="§ Featured Work"
           headline="Production systems, not portfolio pieces."
           subheadline="Three flagship builds — dispatch software, league operations, and custom booking — each running a real business workflow today."
@@ -81,12 +87,13 @@ export default function Home() {
             href: `/projects/${featured.slug}`,
           }}
           secondaryCta={{ label: 'Get in touch', href: '#contact' }}
-        />
+          />
+        </Reveal>
       </section>
 
       {/* ===== INDEX OF WORK ===== */}
       <section className="border-b border-rule-strong">
-        <div className="mx-auto max-w-content px-6 md:px-10">
+        <Reveal className="mx-auto max-w-content px-6 md:px-10">
           {/* Table header bar */}
           <div className="flex justify-between items-baseline py-5 border-b border-rule font-mono">
             <span className="text-xs font-medium tracking-[0.06em] uppercase text-ink">
@@ -181,12 +188,12 @@ export default function Home() {
               </Link>
             )
           )}
-        </div>
+        </Reveal>
       </section>
 
       {/* ===== ABOUT ===== */}
       <section id="about" className="border-b border-rule-strong">
-        <div className="mx-auto max-w-content px-6 md:px-10 py-14 md:py-16 grid md:grid-cols-[200px_1fr] gap-8 md:gap-10">
+        <Reveal className="mx-auto max-w-content px-6 md:px-10 py-14 md:py-16 grid md:grid-cols-[200px_1fr] gap-8 md:gap-10">
           <div>
             <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint">
               § About
@@ -208,12 +215,12 @@ export default function Home() {
               workflow.
             </p>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ===== CONTACT ===== */}
       <section id="contact">
-        <div className="mx-auto max-w-content px-6 md:px-10 py-14 md:py-16 grid md:grid-cols-[200px_1fr] gap-8 md:gap-10">
+        <Reveal className="mx-auto max-w-content px-6 md:px-10 py-14 md:py-16 grid md:grid-cols-[200px_1fr] gap-8 md:gap-10">
           <div>
             <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint">
               § Contact
@@ -254,7 +261,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
     </main>
   );
