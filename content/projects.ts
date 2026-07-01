@@ -1,3 +1,25 @@
+export type CaseStudyExhibit = {
+  title: string;
+  caption: string;
+};
+
+export type CaseStudyLink = {
+  label: string;
+  href: string;
+};
+
+export type CaseStudy = {
+  problem: string;
+  users: string;
+  solution: string;
+  keyFeatures: string[];
+  technicalDecisions: string[];
+  challenges: string[];
+  improvements: string[];
+  exhibits?: CaseStudyExhibit[];
+  links?: CaseStudyLink[];
+};
+
 export type Project = {
   slug: string;
   ref: string;
@@ -15,6 +37,7 @@ export type Project = {
   metric?: string;
   live?: string;
   repo?: string;
+  caseStudy?: CaseStudy;
 };
 
 export const featuredProjects: Project[] = [
@@ -38,6 +61,40 @@ export const featuredProjects: Project[] = [
       'Customer intake, quote approval, and technician SMS updates',
       'Analytics and background job processing via Supabase and Twilio',
     ],
+    caseStudy: {
+      problem:
+        'Small HVAC teams coordinate work through calls, texts, and whiteboard schedules. Under real volume that process fragments: jobs get double-booked or dropped, quote approvals stall in an inbox, and the moment the person holding the whiteboard is off-shift, nobody can see the state of the day. The teams that need dispatch software most are the ones enterprise field-service suites price out.',
+      users:
+        'Owner-operators and dispatch staff at small HVAC companies, the technicians they assign in the field, and the customers waiting on arrival windows and quote approvals.',
+      solution:
+        'A structured dispatch system built around the actual lifecycle of a job. Work flows from customer intake through quote approval, technician assignment, and completion, with each transition enforced by state-machine logic rather than convention. Dispatch staff get a single back-office view of the day; technicians and customers get real-time SMS updates without installing anything.',
+      keyFeatures: [
+        'Live dispatch board with job status driven by explicit state-machine logic',
+        'Customer intake and quote approval flow',
+        'Technician assignment with real-time SMS updates via Twilio',
+        'Analytics on job volume and status across the pipeline',
+        'Background processing so SMS delivery never blocks a dispatch action',
+      ],
+      technicalDecisions: [
+        'Next.js on Vercel with Supabase as the primary backend — an infrastructure footprint one engineer can operate',
+        'Job lifecycle modeled as an explicit state machine, so invalid transitions are impossible rather than merely discouraged',
+        'Twilio SMS routed through background jobs to keep message delivery out of the request path',
+        'Supabase handling auth, data, and analytics queries to avoid a separate services layer',
+      ],
+      challenges: [
+        'Matching job states to how dispatchers actually work — the model went through several revisions when real workflows like rescheduling and partial completion broke the first design',
+        'Keeping SMS delivery observable (failures, retries, cost) without building a full messaging dashboard',
+      ],
+      improvements: [
+        'Technician-facing mobile view for status updates from the field',
+        'Route-aware scheduling suggestions during assignment',
+        'Customer self-service rescheduling',
+      ],
+      exhibits: [
+        { title: 'Dispatch board', caption: 'Back-office dispatch view — screenshot pending' },
+        { title: 'Job lifecycle', caption: 'State flow from intake to completion — diagram pending' },
+      ],
+    },
   },
   {
     slug: 'serpent-ascension-league',
@@ -58,6 +115,38 @@ export const featuredProjects: Project[] = [
       'Admin tooling, registrations, Discord auth, and draft tooling',
       'Production-readiness audit and league workflow domain modeling',
     ],
+    caseStudy: {
+      problem:
+        'A competitive gaming league was run out of Discord messages and spreadsheets: registrations tracked by hand, standings recalculated manually, drafts coordinated live in voice chat with no durable record. Each season the admin load grew, and public-facing results lagged what had actually happened.',
+      users:
+        'League admins running seasons and drafts, competing players and team captains, and spectators who want current standings and schedules without joining the Discord server.',
+      solution:
+        'A proper operations platform for the league. A public hub serves standings, schedules, teams, players, and watch pages, backed by admin tooling for registrations, season management, and multi-season drafts. Discord stays the community home — authentication is Discord-based — but the operational record lives in the platform instead of scroll-back.',
+      keyFeatures: [
+        'Public standings, schedule, teams, players, and watch pages',
+        'Player registration with Discord-based authentication',
+        'Admin tooling for seasons, divisions, rosters, and match operations',
+        'Multi-season draft management',
+      ],
+      technicalDecisions: [
+        'React and TypeScript throughout, with league domain modeling (seasons, divisions, matches, rosters, draft flows) done before UI work',
+        'Discord OAuth as the single identity source, since every participant already lives there',
+        'Test coverage and a production-readiness audit completed before opening public registration',
+      ],
+      challenges: [
+        'League rules are dense with edge cases — mid-season roster changes, forfeits, tiebreakers — and the domain model had to absorb them without special-casing the UI',
+        'Balancing public pages anyone can read against admin operations that need strict access control',
+      ],
+      improvements: [
+        'Automated match reporting from game APIs where available',
+        'Historical player and team stats across seasons',
+        'Self-service roster management for team captains',
+      ],
+      exhibits: [
+        { title: 'Standings hub', caption: 'Public standings and schedule — screenshot pending' },
+        { title: 'Draft tooling', caption: 'Multi-season draft admin view — screenshot pending' },
+      ],
+    },
   },
   {
     slug: 'threetails-booking',
@@ -78,6 +167,39 @@ export const featuredProjects: Project[] = [
       'Smart calendar logic with party-size and time-of-day constraints',
       'Square checkout and automated email confirmations',
     ],
+    caseStudy: {
+      problem:
+        'A cat cafe concept needed booking logic no off-the-shelf scheduler handles: time-of-day blocks instead of free-form slots, party-size caps per block, a legally required agreements step before payment, and Square as the processor. Generic booking SaaS either could not express those rules or buried them behind workarounds the owner would have to police by hand.',
+      users:
+        'Guests booking visits — usually on a phone — and the owner, who needs the business rules enforced automatically rather than by reading every reservation after the fact.',
+      solution:
+        'A custom booking flow built exactly around the business rules. The calendar only surfaces valid options: time-of-day blocks with capacity remaining and party sizes within limits. Guests acknowledge the rules agreement before checkout, pay through Square, and receive automated email confirmations. Invalid bookings are unselectable, not merely rejected.',
+      keyFeatures: [
+        'Smart calendar that only offers bookable time-of-day blocks with remaining capacity',
+        'Party-size and time-of-day constraints enforced at selection time, not at review time',
+        'Required rules-agreement flow ahead of checkout',
+        'Square checkout integration',
+        'Automated email confirmations',
+      ],
+      technicalDecisions: [
+        'Next.js app with booking rules centralized in a single constraint layer, so the calendar UI, validation, and checkout can never disagree',
+        'Square for payments because the business already operated on Square',
+        'Email confirmations driven by booking events rather than manual follow-up',
+      ],
+      challenges: [
+        'Encoding the rules so the UI itself enforces them — making invalid states unselectable instead of validating after submission',
+        'Keeping the calendar UX simple on mobile while it carries block, capacity, and party-size logic',
+      ],
+      improvements: [
+        'Owner-facing dashboard to manage blocks and capacity without a deploy',
+        'Waitlist for full blocks',
+        'SMS reminders ahead of visits',
+      ],
+      exhibits: [
+        { title: 'Booking calendar', caption: 'Block and party-size selection — screenshot pending' },
+        { title: 'Agreements flow', caption: 'Pre-checkout rules agreement — screenshot pending' },
+      ],
+    },
   },
 ];
 

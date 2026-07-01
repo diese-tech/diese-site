@@ -38,6 +38,30 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
 
   const next = getNextProject(slug);
   const fileNumber = project.ref.replace('R-', '').padStart(3, '0');
+  const caseStudy = project.caseStudy;
+
+  const proseSections: [string, string][] = caseStudy
+    ? [
+        ['Problem', caseStudy.problem],
+        ['Who it serves', caseStudy.users],
+        ['Solution', caseStudy.solution],
+      ]
+    : [];
+
+  const listSections: [string, string[]][] = caseStudy
+    ? [
+        ['Key features', caseStudy.keyFeatures],
+        ['Technical decisions', caseStudy.technicalDecisions],
+        ['Challenges & tradeoffs', caseStudy.challenges],
+        ['What I would improve next', caseStudy.improvements],
+      ]
+    : [];
+
+  const links = [
+    ...(project.live ? [{ label: 'Live site', href: project.live }] : []),
+    ...(project.repo ? [{ label: 'Source repository', href: project.repo }] : []),
+    ...(caseStudy?.links ?? []),
+  ];
 
   return (
     <main className="mx-auto max-w-content px-6 md:px-10 py-10 md:py-12">
@@ -110,25 +134,132 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
             </div>
           </div>
 
-          {/* What was built */}
-          <div className="mb-10">
-            <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-5">
-              What was built
-            </div>
-            <div className="flex flex-col">
-              {project.outcomes.map((outcome, i) => (
-                <div
-                  key={i}
-                  className="flex gap-5 py-5 border-b border-rule last:border-b-0 items-start"
-                >
-                  <span className="font-mono text-[11px] text-signal flex-none w-6 pt-0.5">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <p className="font-sans text-[15px] leading-[1.55] text-ink-muted">{outcome}</p>
+          {caseStudy ? (
+            <>
+              {/* Case study — prose sections */}
+              {proseSections.map(([heading, body], i) => (
+                <div key={heading} className="mb-10 border-t border-rule pt-6">
+                  <div className="flex gap-5 items-baseline mb-4">
+                    <span className="font-mono text-[11px] text-signal flex-none w-6">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h2 className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint">
+                      {heading}
+                    </h2>
+                  </div>
+                  <p className="font-sans text-[15px] leading-[1.6] text-ink-muted max-w-[70ch] md:pl-11">
+                    {body}
+                  </p>
                 </div>
               ))}
+
+              {/* Case study — list sections */}
+              {listSections.map(([heading, items], i) => (
+                <div key={heading} className="mb-10 border-t border-rule pt-6">
+                  <div className="flex gap-5 items-baseline mb-2">
+                    <span className="font-mono text-[11px] text-signal flex-none w-6">
+                      {String(proseSections.length + i + 1).padStart(2, '0')}
+                    </span>
+                    <h2 className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint">
+                      {heading}
+                    </h2>
+                  </div>
+                  <div className="flex flex-col md:pl-11">
+                    {items.map((item, j) => (
+                      <div
+                        key={j}
+                        className="flex gap-5 py-4 border-b border-rule last:border-b-0 items-start"
+                      >
+                        <span className="font-mono text-[11px] text-ink-faint flex-none w-6 pt-0.5">
+                          {String(j + 1).padStart(2, '0')}
+                        </span>
+                        <p className="font-sans text-[15px] leading-[1.55] text-ink-muted">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* Case study — exhibits (intentional placeholders until assets exist) */}
+              {caseStudy.exhibits && caseStudy.exhibits.length > 0 && (
+                <div className="mb-10 border-t border-rule pt-6">
+                  <div className="flex gap-5 items-baseline mb-5">
+                    <span className="font-mono text-[11px] text-signal flex-none w-6">
+                      {String(proseSections.length + listSections.length + 1).padStart(2, '0')}
+                    </span>
+                    <h2 className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint">
+                      Exhibits
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:pl-11">
+                    {caseStudy.exhibits.map((exhibit, i) => (
+                      <div
+                        key={exhibit.title}
+                        className="border border-dashed border-rule p-5 min-h-[120px] flex flex-col justify-between"
+                      >
+                        <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-ink-faint">
+                          Exhibit {String.fromCharCode(65 + i)}
+                        </div>
+                        <div>
+                          <div className="font-grotesk font-medium text-sm text-ink mt-4">
+                            {exhibit.title}
+                          </div>
+                          <div className="font-mono text-[11px] text-ink-faint mt-1">
+                            {exhibit.caption}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </>
+          ) : (
+            /* What was built */
+            <div className="mb-10">
+              <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-5">
+                What was built
+              </div>
+              <div className="flex flex-col">
+                {project.outcomes.map((outcome, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-5 py-5 border-b border-rule last:border-b-0 items-start"
+                  >
+                    <span className="font-mono text-[11px] text-signal flex-none w-6 pt-0.5">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <p className="font-sans text-[15px] leading-[1.55] text-ink-muted">{outcome}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Links */}
+          {links.length > 0 && (
+            <div className="mb-10 border-t border-rule pt-6">
+              <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-4">
+                Links
+              </div>
+              <div className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs tracking-[0.06em] uppercase">
+                {links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink-muted border-b border-rule pb-px hover:text-signal hover:border-signal transition-colors duration-[120ms]"
+                  >
+                    {link.label} ↗
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Footer */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-t border-rule pt-6">
