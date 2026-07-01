@@ -13,6 +13,8 @@ export type Project = {
   synopsis: string;
   outcomes: string[];
   metric?: string;
+  live?: string;
+  repo?: string;
 };
 
 export const featuredProjects: Project[] = [
@@ -27,6 +29,7 @@ export const featuredProjects: Project[] = [
     status: 'active',
     stackShort: 'Next · Supabase · Twilio',
     stack: ['Next.js', 'Supabase', 'Twilio', 'Vercel'],
+    live: 'https://swiftdispatch.app',
     summary: 'Dispatch software for small HVAC teams outgrowing calls, texts, and whiteboards.',
     synopsis:
       'Small HVAC teams were coordinating jobs through calls, texts, and whiteboard schedules — a process that fragments under volume and breaks the moment anyone is off-shift. SwiftDispatch replaces that with a structured routing system: jobs flow from customer intake through quote approval, technician assignment, and completion, with real-time SMS updates and a back-office view that gives dispatch staff a single operational picture.',
@@ -141,6 +144,29 @@ export const alsoBuilt: Project[] = [
     summary: 'Operational software published as a sanitized case study after removing sensitive details.',
     synopsis: 'Confidential operational software. Case study available on request after sanitization.',
     outcomes: ['Placeholder for confidential workflow work'],
+  },
+  {
+    slug: 'brewloop',
+    ref: 'R-008',
+    title: 'BrewLoop',
+    label: 'Cafe ordering and loyalty platform',
+    domain: 'Food & Beverage / Hospitality',
+    year: '2025',
+    role: 'Sole Engineer',
+    status: 'active',
+    stackShort: 'Next · Supabase · Square',
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'Square'],
+    summary:
+      "QR-to-web ordering and loyalty app for independent cafes, replacing paper menus and punch cards without touching the cafe's existing POS.",
+    synopsis:
+      "Independent cafes run ordering and loyalty on paper menus and punch cards — no order queue, no customer picture, and nothing the owner can change without a reprint. BrewLoop replaces both without touching the cafe's existing POS: a live pilot with an independent cafe (Black Rabbit) covers a public branded menu, mobile ordering with table QR support, a staff order queue, an owner dashboard for menu and rewards management, and phone/email-based visit rewards. Supabase backs it with tenant-aware row-level security and Realtime order updates, Square handles payments, and a credential-free demo mode lets a cafe test the full ordering flow before any backend is configured.",
+    outcomes: [
+      'Live cafe pilot: branded public menu, table-QR mobile ordering, and staff order queue',
+      'Owner dashboard for menu and rewards management with phone/email-based visit rewards',
+      'Tenant-aware row-level security and Realtime order updates via Supabase, payments via Square',
+      'Credential-free demo mode and architecture decisions tracked in ADRs',
+    ],
+    repo: 'https://github.com/diese-tech/brewloop',
   },
 ];
 

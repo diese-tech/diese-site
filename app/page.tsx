@@ -245,7 +245,7 @@ export default function Home() {
             </p>
             <p className="font-sans text-base leading-[1.6] text-ink-muted mt-4">
               Current focus: full-stack web development with a bias toward maintainable systems,
-              clean data modeling, and shipping software that earns its place in a team's daily
+              clean data modeling, and shipping software that earns its place in a team&apos;s daily
               workflow.
             </p>
           </div>
