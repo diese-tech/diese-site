@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PremiumEntrypoint } from '@/components/premium-entrypoint';
 import { allProjects, featuredProjects } from '@/content/projects';
 import { site } from '@/content/site';
 
@@ -61,68 +62,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== FEATURED SYSTEM RECORD ===== */}
+      {/* ===== FEATURED WORK — PREMIUM ENTRYPOINT ===== */}
       <section id="work" className="border-b border-rule-strong">
-        <div className="mx-auto max-w-content px-6 md:px-10 py-10 md:py-12">
-          <div className="border border-rule bg-paper-panel">
-            {/* Record header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 p-5 md:p-6 border-b border-rule">
-              <div>
-                <div className="font-mono text-[11px] tracking-[0.08em] text-signal mb-2 uppercase">
-                  {featured.ref} / System Record
-                </div>
-                <h2 className="font-grotesk font-semibold text-[26px] md:text-[30px] tracking-[-0.01em] leading-none text-ink">
-                  {featured.title}
-                </h2>
-                <div className="font-sans text-sm text-ink-muted mt-2">{featured.summary}</div>
-              </div>
-              <span className="font-mono text-[10px] tracking-[0.06em] text-ok border border-ok/40 px-3 py-1.5 shrink-0 self-start uppercase">
-                ● Operational
-              </span>
-            </div>
-
-            {/* Metadata grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 border-b border-rule font-mono divide-x divide-rule">
-              <div className="p-4">
-                <div className="text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-1.5">
-                  Domain
-                </div>
-                <div className="text-xs text-ink">{featured.domain}</div>
-              </div>
-              <div className="p-4">
-                <div className="text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-1.5">
-                  Role
-                </div>
-                <div className="text-xs text-ink">{featured.role}</div>
-              </div>
-              <div className="p-4">
-                <div className="text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-1.5">
-                  Stack
-                </div>
-                <div className="text-xs text-ink">{featured.stackShort}</div>
-              </div>
-              <div className="p-4">
-                <div className="text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-1.5">
-                  Year
-                </div>
-                <div className="text-xs text-ink">{featured.year} — present</div>
-              </div>
-            </div>
-
-            {/* Synopsis */}
-            <div className="p-5 md:p-6">
-              <p className="font-sans text-[15px] leading-[1.6] text-ink-muted max-w-[70ch]">
-                {featured.synopsis}
-              </p>
-              <Link
-                href={`/projects/${featured.slug}`}
-                className="inline-block mt-5 font-grotesk font-semibold text-sm text-ink border-b-2 border-signal pb-0.5 hover:text-signal transition-colors duration-[120ms]"
-              >
-                Open case file →
-              </Link>
-            </div>
-          </div>
-        </div>
+        <PremiumEntrypoint
+          kicker="§ Featured Work"
+          headline="Production systems, not portfolio pieces."
+          subheadline="Three flagship builds — dispatch software, league operations, and custom booking — each running a real business workflow today."
+          watermarks={featuredProjects.map((project) => project.ref)}
+          cards={featuredProjects.map((project) => ({
+            kicker: `${project.ref} / ${project.domain}`,
+            title: project.title,
+            description: project.summary,
+            meta: `${project.stackShort} · ${project.year}`,
+            href: `/projects/${project.slug}`,
+          }))}
+          primaryCta={{
+            label: `Open the ${featured.title} case file`,
+            href: `/projects/${featured.slug}`,
+          }}
+          secondaryCta={{ label: 'Get in touch', href: '#contact' }}
+        />
       </section>
 
       {/* ===== INDEX OF WORK ===== */}
