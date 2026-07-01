@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     description: site.description,
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dustin Nieves',
+    description: site.description,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
