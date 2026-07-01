@@ -52,6 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${spaceGrotesk.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body>
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <Header />
         {children}
         <Footer />
