@@ -3,6 +3,8 @@ import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Header, Footer } from '@/components/layout';
+import { CursorBloom } from '@/components/cursor-bloom';
+import { ThemeScript } from '@/components/theme-script';
 import { site } from '@/content/site';
 
 const spaceGrotesk = Space_Grotesk({
@@ -49,12 +51,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body>
+        <ThemeScript />
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
+        <CursorBloom />
         <Header />
         {children}
         <Footer />

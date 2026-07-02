@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './app/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -9,17 +10,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: '#f6f4ef',
-        'paper-panel': '#f3f1ea',
-        'paper-sunk': '#e4dfd3',
-        ink: '#1b1a17',
-        'ink-muted': '#6b6657',
-        'ink-faint': '#9a8f7a',
-        rule: '#d8d3c6',
-        'rule-strong': '#ccc7ba',
-        signal: '#9a4a32',
-        'signal-stamp': '#a23a2e',
-        ok: '#4f7a4a',
+        // Theme-aware tokens (CSS variables defined in globals.css)
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        'paper-panel': 'rgb(var(--paper-panel) / <alpha-value>)',
+        'paper-sunk': 'rgb(var(--paper-sunk) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        'ink-muted': 'rgb(var(--ink-muted) / <alpha-value>)',
+        'ink-faint': 'rgb(var(--ink-faint) / <alpha-value>)',
+        rule: 'rgb(var(--rule) / <alpha-value>)',
+        'rule-strong': 'rgb(var(--rule-strong) / <alpha-value>)',
+        signal: 'rgb(var(--signal) / <alpha-value>)',
+        'signal-stamp': 'rgb(var(--signal-stamp) / <alpha-value>)',
+        ok: 'rgb(var(--ok) / <alpha-value>)',
+        // Fixed tones for permanently-dark surfaces (do not flip with theme)
+        void: '#0f0d0b',
+        cream: '#f6f4ef',
       },
       fontFamily: {
         grotesk: ['var(--font-grotesk)', 'Space Grotesk', 'sans-serif'],

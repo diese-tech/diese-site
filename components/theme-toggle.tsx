@@ -33,10 +33,10 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="rounded-full border border-slate-300 p-2 dark:border-white/15"
+      className="flex h-8 w-8 items-center justify-center rounded-full border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
       aria-label="Toggle color theme"
     >
-      {dark ? <Sun size={18} /> : <Moon size={18} />}
+      {dark ? <Sun size={15} /> : <Moon size={15} />}
     </button>
   );
 }

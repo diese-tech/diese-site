@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme tokens — light (original ledger palette) */
+:root {
+  --paper: 246 244 239;
+  --paper-panel: 243 241 234;
+  --paper-sunk: 228 223 211;
+  --ink: 27 26 23;
+  --ink-muted: 107 102 87;
+  --ink-faint: 154 143 122;
+  --rule: 216 211 198;
+  --rule-strong: 204 199 186;
+  --signal: 154 74 50;
+  --signal-stamp: 162 58 46;
+  --ok: 79 122 74;
+  --bloom: rgba(154, 74, 50, 0.055);
+  --selection-bg: #1b1a17;
+  --selection-fg: #f6f4ef;
+}
+
+/* Theme tokens — dark luxury (default) */
+.dark {
+  --paper: 13 11 9;
+  --paper-panel: 20 17 16;
+  --paper-sunk: 30 26 22;
+  --ink: 236 231 223;
+  --ink-muted: 168 159 144;
+  --ink-faint: 113 104 91;
+  --rule: 45 39 32;
+  --rule-strong: 58 50 41;
+  --signal: 201 111 74;
+  --signal-stamp: 210 104 66;
+  --ok: 134 176 124;
+  --bloom: rgba(201, 111, 74, 0.08);
+  --selection-bg: #c96f4a;
+  --selection-fg: #0f0d0b;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -11,8 +47,8 @@ body {
 }
 
 ::selection {
-  background: #1b1a17;
-  color: #f6f4ef;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 /* Ledger row hover */

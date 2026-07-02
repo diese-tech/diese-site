@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { MacWindow } from '@/components/mac-window';
 
 const WORKFLOW_BLOCKS = [
   { code: 'INTAKE', width: 'w-3/4', tone: 'ok' },
@@ -140,14 +141,13 @@ export function BuilderConsole() {
   }, []);
 
   return (
-    <div className="relative border border-rule bg-paper-panel" aria-hidden="true">
-      {/* Console header */}
-      <div className="flex justify-between items-center px-4 py-3 border-b border-rule font-mono text-[10px] tracking-[0.12em] uppercase text-ink-faint">
-        <span>Builder Console</span>
-        <span className="text-ok">● Live</span>
-      </div>
-
-      <div className="relative h-[240px] lg:h-[280px]">
+    <MacWindow
+      title="builder-console"
+      toolbar={
+        <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-ok">● Live</span>
+      }
+    >
+      <div className="relative h-[240px] lg:h-[280px]" aria-hidden="true">
         {/* HTML fallback / simplified mobile visual */}
         <div
           className={`absolute inset-0 flex flex-col justify-center gap-3 px-5 transition-opacity duration-300 ${sceneReady ? 'opacity-0' : 'opacity-100'}`}
@@ -183,6 +183,6 @@ export function BuilderConsole() {
           className={`absolute inset-0 transition-opacity duration-500 ${sceneReady ? 'opacity-100' : 'opacity-0'}`}
         />
       </div>
-    </div>
+    </MacWindow>
   );
 }
