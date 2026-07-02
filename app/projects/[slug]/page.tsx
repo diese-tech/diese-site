@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { MacWindow } from '@/components/mac-window';
 import { allProjects } from '@/content/projects';
 
 type ProjectPageParams = Promise<{ slug: string }>;
@@ -37,7 +38,6 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
   }
 
   const next = getNextProject(slug);
-  const fileNumber = project.ref.replace('R-', '').padStart(3, '0');
   const caseStudy = project.caseStudy;
 
   const proseSections: [string, string][] = caseStudy
@@ -75,20 +75,16 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
         </Link>
       </div>
 
-      {/* Dossier frame */}
-      <div
-        className="border border-rule bg-paper-panel relative overflow-hidden"
-        style={{ borderTop: '3px solid #1b1a17' }}
+      {/* Dossier window */}
+      <MacWindow
+        title={`case-file — ${project.ref}`}
+        toolbar={
+          <span className="hidden sm:block font-mono text-[10px] tracking-[0.08em] uppercase text-ink-faint">
+            Opened {project.year} · {project.domain}
+          </span>
+        }
       >
-        <div className="p-7 md:p-12">
-          {/* Case file header row */}
-          <div className="flex justify-between items-baseline border-b border-rule pb-5 mb-7 font-mono text-[11px] tracking-[0.08em] uppercase text-ink-muted">
-            <span>Case File No. {fileNumber}</span>
-            <span className="hidden sm:block">
-              Opened {project.year} · {project.domain}
-            </span>
-          </div>
-
+        <div className="relative overflow-hidden p-7 md:p-12">
           {/* Category kicker */}
           <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-signal-stamp mb-4">
             {project.label}
@@ -277,17 +273,17 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
               </Link>
             )}
           </div>
-        </div>
 
-        {/* Stamp */}
-        <div
-          className="absolute font-mono font-semibold text-signal-stamp border-2 border-signal-stamp tracking-[0.12em] text-[13px] px-3.5 py-2 pointer-events-none"
-          style={{ top: '88px', right: '-4px', transform: 'rotate(-9deg)', opacity: 0.85 }}
-          aria-hidden="true"
-        >
-          CASE FILE
+          {/* Stamp */}
+          <div
+            className="absolute font-mono font-semibold text-signal-stamp border-2 border-signal-stamp tracking-[0.12em] text-[13px] px-3.5 py-2 pointer-events-none"
+            style={{ top: '40px', right: '-4px', transform: 'rotate(-9deg)', opacity: 0.85 }}
+            aria-hidden="true"
+          >
+            CASE FILE
+          </div>
         </div>
-      </div>
+      </MacWindow>
     </main>
   );
 }
