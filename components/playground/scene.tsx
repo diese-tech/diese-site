@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Grid, KeyboardControls, useKeyboardControls } from '@react-three/drei';
+import { KeyboardControls, useGLTF, useKeyboardControls } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody, type RapierRigidBody } from '@react-three/rapier';
 import { LANDMARKS, nearestLandmark } from './landmarks';
 
@@ -15,11 +15,9 @@ export type TouchState = {
 };
 
 /* Palette (fixed hexes — the canvas doesn't participate in theming) */
-const FLOOR = '#12100d';
 const INK = '#1b1a17';
 const RUST = '#c96f4a';
 const CREAM = '#e4dfd3';
-const FAINT = '#71685b';
 
 const CONTROL_MAP = [
   { name: 'forward', keys: ['KeyW', 'ArrowUp'] },
@@ -38,6 +36,99 @@ const FULL_TURN_SPEED = 4; // u/s at which steering reaches full authority
 const IDLE_TURN = 0.35; // fraction of yaw available when stationary
 const GRIP = 7; // how quickly momentum realigns with the heading
 
+/* Kenney (CC0) kits + coffee shop set piece, staged in public/models */
+const MODELS = {
+  loader: '/models/carkit/loader.glb',
+  van: '/models/carkit/van.glb',
+  shop: '/models/coffee-shop.glb',
+  cup: '/models/foodkit/cup.glb',
+  cat: '/models/cubepets/cat.glb',
+  screenWide: '/models/factorykit/screen-wide.glb',
+  screenFlat: '/models/factorykit/screen-flat.glb',
+  boxLarge: '/models/factorykit/box-large.glb',
+  boxSmall: '/models/factorykit/box-small.glb',
+  boxWide: '/models/factorykit/box-wide.glb',
+};
+Object.values(MODELS).forEach((url) => useGLTF.preload(url));
+
+function Model({
+  url,
+  scale = 1,
+  position,
+  rotation,
+}: {
+  url: string;
+  scale?: number;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  const { scene } = useGLTF(url);
+  const cloned = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((obj) => {
+      if ((obj as THREE.Mesh).isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+    return clone;
+  }, [scene]);
+  return <primitive object={cloned} scale={scale} position={position} rotation={rotation} />;
+}
+
+/** Procedural concrete ops floor: dark speckle, tile seams, rust seam marks. */
+function makeFloorTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 512;
+  const g = canvas.getContext('2d')!;
+  g.fillStyle = '#16130f';
+  g.fillRect(0, 0, 512, 512);
+  // Deterministic speckle (mulberry32) — stable across re-renders
+  let seed = 0x9a4a32;
+  const rand = () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  for (let i = 0; i < 9000; i++) {
+    const x = rand() * 512;
+    const y = rand() * 512;
+    g.fillStyle = rand() > 0.5 ? 'rgba(246,244,239,0.025)' : 'rgba(0,0,0,0.06)';
+    g.fillRect(x, y, 1.5, 1.5);
+  }
+  g.strokeStyle = 'rgba(0,0,0,0.4)';
+  g.lineWidth = 2;
+  for (let i = 0; i <= 4; i++) {
+    g.beginPath();
+    g.moveTo(i * 128, 0);
+    g.lineTo(i * 128, 512);
+    g.stroke();
+    g.beginPath();
+    g.moveTo(0, i * 128);
+    g.lineTo(512, i * 128);
+    g.stroke();
+  }
+  g.fillStyle = 'rgba(201,111,74,0.28)';
+  for (let i = 0; i <= 4; i++) {
+    for (let k = 0; k <= 4; k++) {
+      g.fillRect(i * 128 - 5, k * 128 - 1, 10, 2);
+      g.fillRect(i * 128 - 1, k * 128 - 5, 2, 10);
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(10.5, 10.5);
+  texture.anisotropy = 8;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function useFloorTexture() {
+  return useMemo(() => makeFloorTexture(), []);
+}
+
 function Beacon({ position }: { position: [number, number, number] }) {
   const ref = useRef<THREE.Mesh>(null);
   useFrame((state) => {
@@ -53,131 +144,75 @@ function Beacon({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** BrewLoop — café stand with awning and a cup on the counter. */
+/** BrewLoop — the coffee shop, with a knockable giant coffee cup outside. */
 function CafeStand({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <RigidBody type="fixed" colliders="cuboid">
-        <mesh castShadow receiveShadow position={[0, 0.9, 0]}>
-          <boxGeometry args={[4.2, 1.8, 1.7]} />
-          <meshStandardMaterial color={CREAM} roughness={0.85} />
-        </mesh>
-        {[-1.9, 1.9].map((x) => (
-          <mesh key={x} castShadow position={[x, 2.4, -0.7]}>
-            <boxGeometry args={[0.16, 3, 0.16]} />
-            <meshStandardMaterial color={INK} roughness={0.9} />
-          </mesh>
-        ))}
-        <mesh castShadow position={[0, 3.7, -0.25]} rotation={[0.16, 0, 0]}>
-          <boxGeometry args={[4.8, 0.14, 2.2]} />
-          <meshStandardMaterial color={RUST} roughness={0.8} />
-        </mesh>
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[3.2, 2.7, 2.9]} position={[0, 2.7, 0]} />
+        <Model url={MODELS.shop} scale={6} position={[0, 2.16, 0]} />
       </RigidBody>
-      {/* Cup — dynamic, knockable */}
-      <RigidBody position={[1.1, 2.3, 0.25]} colliders="cuboid">
-        <mesh castShadow>
-          <cylinderGeometry args={[0.28, 0.22, 0.55, 14]} />
-          <meshStandardMaterial color={RUST} roughness={0.7} />
-        </mesh>
+      <RigidBody position={[4.4, 1, 3.4]} colliders="cuboid">
+        <Model url={MODELS.cup} scale={5} />
       </RigidBody>
-      <Beacon position={[0, 5.2, 0]} />
+      <Beacon position={[0, 7.2, 0]} />
     </group>
   );
 }
 
-/** SwiftDispatch — service van. */
+/** SwiftDispatch — delivery van. */
 function DispatchVan({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <RigidBody type="fixed" colliders="cuboid">
-        <mesh castShadow receiveShadow position={[0, 1.5, 0.4]}>
-          <boxGeometry args={[2.3, 2.2, 4]} />
-          <meshStandardMaterial color={CREAM} roughness={0.8} />
-        </mesh>
-        <mesh castShadow position={[0, 1.05, -2.6]}>
-          <boxGeometry args={[2.3, 1.3, 1.6]} />
-          <meshStandardMaterial color={RUST} roughness={0.75} />
-        </mesh>
-        <mesh castShadow position={[0, 2.75, -2.5]}>
-          <boxGeometry args={[0.8, 0.25, 0.5]} />
-          <meshStandardMaterial color={RUST} emissive={RUST} emissiveIntensity={0.3} />
-        </mesh>
-        {(
-          [
-            [-1.15, 0.45, -2.4],
-            [1.15, 0.45, -2.4],
-            [-1.15, 0.45, 1.6],
-            [1.15, 0.45, 1.6],
-          ] as const
-        ).map(([x, y, z]) => (
-          <mesh key={`${x}${z}`} castShadow position={[x, y, z]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.45, 0.45, 0.3, 16]} />
-            <meshStandardMaterial color="#0c0a08" roughness={0.9} />
-          </mesh>
-        ))}
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[1.0, 1.65, 2.2]} position={[0, 1.65, 0]} />
+        <Model url={MODELS.van} scale={1.3} position={[0, 1.3, 0]} rotation={[0, Math.PI / 5, 0]} />
       </RigidBody>
-      <Beacon position={[0, 4.6, 0]} />
+      <Beacon position={[0, 5, 0]} />
     </group>
   );
 }
 
-/** Serpent Ascension League — arena plinth with pillars and a banner ring. */
+/** Serpent Ascension League — esports stage: plinth, pillars, hanging screens. */
 function LeagueArena({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <RigidBody type="fixed" colliders="cuboid">
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[3.4, 0.35, 3.4]} position={[0, 0.35, 0]} />
         <mesh castShadow receiveShadow position={[0, 0.35, 0]}>
           <cylinderGeometry args={[3.4, 3.7, 0.7, 24]} />
           <meshStandardMaterial color={INK} roughness={0.9} />
         </mesh>
-        {[0, 1, 2, 3].map((i) => {
-          const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
-          return (
-            <mesh
-              key={i}
-              castShadow
-              position={[Math.cos(angle) * 2.7, 2.1, Math.sin(angle) * 2.7]}
-            >
-              <boxGeometry args={[0.45, 3.4, 0.45]} />
-              <meshStandardMaterial color={CREAM} roughness={0.85} />
-            </mesh>
-          );
-        })}
+        {[-2.4, 2.4].map((x) => (
+          <mesh key={x} castShadow position={[x, 2.6, 0]}>
+            <boxGeometry args={[0.4, 4.5, 0.4]} />
+            <meshStandardMaterial color={CREAM} roughness={0.85} />
+          </mesh>
+        ))}
       </RigidBody>
-      <mesh position={[0, 3.9, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[2.7, 0.14, 10, 40]} />
-        <meshStandardMaterial color={RUST} emissive={RUST} emissiveIntensity={0.35} />
-      </mesh>
-      <Beacon position={[0, 5.4, 0]} />
+      {/* Big hanging screen between the pillars + angled side panels */}
+      <Model url={MODELS.screenWide} scale={1.3} position={[0, 3.0, 0]} />
+      <Model url={MODELS.screenFlat} scale={1.0} position={[-3.2, 0.7, 1.9]} rotation={[0, 0.8, 0]} />
+      <Model url={MODELS.screenFlat} scale={1.0} position={[3.2, 0.7, 1.9]} rotation={[0, -0.8, 0]} />
+      <Beacon position={[0, 6.4, 0]} />
     </group>
   );
 }
 
-/** ThreeTails — cat tower with ears. */
+/** ThreeTails — a big low-poly cat on a plinth. */
 function CatTower({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <RigidBody type="fixed" colliders="cuboid">
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[1.5, 0.5, 1.5]} position={[0, 0.5, 0]} />
+        <CuboidCollider args={[0.9, 1.2, 0.95]} position={[0, 2.2, 0]} />
         <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
-          <cylinderGeometry args={[1.4, 1.7, 1, 18]} />
+          <cylinderGeometry args={[1.7, 2.0, 1, 18]} />
           <meshStandardMaterial color={INK} roughness={0.9} />
         </mesh>
-        <mesh castShadow position={[0, 1.9, 0]}>
-          <boxGeometry args={[1.5, 1.8, 1.5]} />
-          <meshStandardMaterial color={CREAM} roughness={0.85} />
-        </mesh>
-        <mesh castShadow position={[0, 3.15, 0]}>
-          <cylinderGeometry args={[1.3, 1.3, 0.35, 18]} />
-          <meshStandardMaterial color={RUST} roughness={0.8} />
-        </mesh>
-        {[-0.55, 0.55].map((x) => (
-          <mesh key={x} castShadow position={[x, 3.75, 0]} rotation={[0, 0, x < 0 ? 0.3 : -0.3]}>
-            <coneGeometry args={[0.32, 0.75, 4]} />
-            <meshStandardMaterial color={RUST} roughness={0.8} />
-          </mesh>
-        ))}
+        <Model url={MODELS.cat} scale={1.4} position={[0, 1.45, 0]} rotation={[0, -0.5, 0]} />
       </RigidBody>
-      <Beacon position={[0, 5.1, 0]} />
+      <Beacon position={[0, 5.6, 0]} />
     </group>
   );
 }
@@ -297,66 +332,43 @@ function Forklift({
       enabledRotations={[false, true, false]}
     >
       <CuboidCollider args={[0.9, 0.55, 1.3]} />
-      {/* Body */}
-      <mesh castShadow position={[0, 0.05, 0.15]}>
-        <boxGeometry args={[1.6, 0.9, 2.1]} />
-        <meshStandardMaterial color={RUST} roughness={0.75} />
-      </mesh>
-      {/* Cab */}
-      <mesh castShadow position={[0, 0.85, 0.55]}>
-        <boxGeometry args={[1.3, 0.8, 1.0]} />
-        <meshStandardMaterial color={INK} roughness={0.85} />
-      </mesh>
-      {/* Mast */}
-      <mesh castShadow position={[0, 0.7, -1.15]}>
-        <boxGeometry args={[1.1, 1.9, 0.15]} />
-        <meshStandardMaterial color={INK} roughness={0.85} />
-      </mesh>
-      {/* Forks */}
-      {[-0.35, 0.35].map((x) => (
-        <mesh key={x} castShadow position={[x, -0.42, -1.75]}>
-          <boxGeometry args={[0.18, 0.08, 1.1]} />
-          <meshStandardMaterial color={CREAM} roughness={0.6} metalness={0.2} />
-        </mesh>
-      ))}
-      {/* Wheels */}
-      {(
-        [
-          [-0.75, -0.35, 0.75],
-          [0.75, -0.35, 0.75],
-          [-0.75, -0.35, -0.7],
-          [0.75, -0.35, -0.7],
-        ] as const
-      ).map(([x, y, z]) => (
-        <mesh key={`${x}${z}`} castShadow position={[x, y, z]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.34, 0.34, 0.25, 18]} />
-          <meshStandardMaterial color="#0c0a08" roughness={0.9} />
-        </mesh>
-      ))}
+      {/* Kenney shovel tractor as the loader; model faces +Z, we drive -Z */}
+      <Model
+        url={MODELS.loader}
+        scale={1.15}
+        position={[0, 0.25, 0]}
+        rotation={[0, Math.PI, 0]}
+      />
     </RigidBody>
   );
 }
 
 function Crate({
+  url,
   position,
-  size = 1,
-  color = CREAM,
+  scale = 2,
+  rotation = 0,
 }: {
+  url: string;
   position: [number, number, number];
-  size?: number;
-  color?: string;
+  scale?: number;
+  rotation?: number;
 }) {
   return (
-    <RigidBody position={position} colliders="cuboid" linearDamping={0.4} angularDamping={0.6}>
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[size, size, size]} />
-        <meshStandardMaterial color={color} roughness={0.85} />
-      </mesh>
+    <RigidBody
+      position={position}
+      rotation={[0, rotation, 0]}
+      colliders="cuboid"
+      linearDamping={0.4}
+      angularDamping={0.6}
+    >
+      <Model url={url} scale={scale} />
     </RigidBody>
   );
 }
 
 function Arena() {
+  const floorTexture = useFloorTexture();
   return (
     <>
       {/* Floor */}
@@ -364,22 +376,9 @@ function Arena() {
         <CuboidCollider args={[ARENA, 0.5, ARENA]} position={[0, -0.5, 0]} />
         <mesh receiveShadow position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[ARENA * 2, ARENA * 2]} />
-          <meshStandardMaterial color={FLOOR} roughness={1} />
+          <meshStandardMaterial map={floorTexture} roughness={1} />
         </mesh>
       </RigidBody>
-      {/* Ruled grid, echoing the site's hairlines */}
-      <Grid
-        position={[0, 0.01, 0]}
-        args={[ARENA * 2, ARENA * 2]}
-        cellSize={2}
-        cellThickness={0.6}
-        cellColor={FAINT}
-        sectionSize={10}
-        sectionThickness={1}
-        sectionColor={RUST}
-        fadeDistance={70}
-        fadeStrength={2}
-      />
       {/* Low walls to keep the forklift in play */}
       {(
         [
@@ -397,13 +396,13 @@ function Arena() {
           </mesh>
         </RigidBody>
       ))}
-      {/* Crates to shove around */}
-      <Crate position={[6, 2, -8]} color={CREAM} />
-      <Crate position={[6.6, 3.4, -8.2]} size={0.8} color={RUST} />
-      <Crate position={[-9, 2, -6]} size={1.4} color={INK} />
-      <Crate position={[10, 2, 6]} size={1.2} color={RUST} />
-      <Crate position={[-8, 2, 9]} color={CREAM} />
-      <Crate position={[2, 2, 12]} size={0.9} color={INK} />
+      {/* Factory crates to shove around */}
+      <Crate url={MODELS.boxLarge} position={[6, 1, -8]} />
+      <Crate url={MODELS.boxSmall} position={[6.8, 2.5, -8.2]} rotation={0.4} />
+      <Crate url={MODELS.boxWide} position={[-9, 1, -6]} rotation={1.1} />
+      <Crate url={MODELS.boxLarge} position={[10, 1, 6]} scale={1.6} rotation={2.2} />
+      <Crate url={MODELS.boxSmall} position={[-8, 1, 9]} scale={2.4} />
+      <Crate url={MODELS.boxWide} position={[2, 1, 12]} rotation={0.7} />
       {/* Project landmarks */}
       <CafeStand position={[-18, 0, -14]} />
       <DispatchVan position={[18, 0, -16]} />
@@ -442,12 +441,12 @@ export default function Scene({
       >
         <color attach="background" args={['#0d0b09']} />
         <fog attach="fog" args={['#0d0b09', 45, 85]} />
-        <hemisphereLight args={['#c9946f', '#0d0b09', 0.35]} />
-        <ambientLight color="#f6f4ef" intensity={0.45} />
+        <hemisphereLight args={['#c9946f', '#0d0b09', 0.4]} />
+        <ambientLight color="#f6f4ef" intensity={0.5} />
         <directionalLight
           castShadow
           color="#fff3e4"
-          intensity={1.6}
+          intensity={1.7}
           position={[14, 22, 10]}
           shadow-mapSize={[1024, 1024]}
           shadow-camera-left={-30}
