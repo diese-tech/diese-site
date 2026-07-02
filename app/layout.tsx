@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
+import { Geologica, Google_Sans_Code } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Header, Footer } from '@/components/layout';
@@ -7,24 +7,17 @@ import { CursorBloom } from '@/components/cursor-bloom';
 import { ThemeScript } from '@/components/theme-script';
 import { site } from '@/content/site';
 
-const spaceGrotesk = Space_Grotesk({
+const geologica = Geologica({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-grotesk',
+  weight: 'variable',
+  variable: '--font-geologica',
   display: 'swap',
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
+const googleSansCode = Google_Sans_Code({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-mono',
+  weight: 'variable',
+  variable: '--font-gsc',
   display: 'swap',
 });
 
@@ -52,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
+      className={`${geologica.variable} ${googleSansCode.variable}`}
     >
       <body>
         <ThemeScript />

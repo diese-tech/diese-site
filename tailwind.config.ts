@@ -27,9 +27,9 @@ const config: Config = {
         cream: '#f6f4ef',
       },
       fontFamily: {
-        grotesk: ['var(--font-grotesk)', 'Space Grotesk', 'sans-serif'],
-        sans: ['var(--font-sans)', 'IBM Plex Sans', 'sans-serif'],
-        mono: ['var(--font-mono)', 'IBM Plex Mono', 'monospace'],
+        grotesk: ['var(--font-geologica)', 'Geologica', 'sans-serif'],
+        sans: ['var(--font-geologica)', 'Geologica', 'sans-serif'],
+        mono: ['var(--font-gsc)', 'Google Sans Code', 'monospace'],
       },
       maxWidth: {
         content: '1180px',
