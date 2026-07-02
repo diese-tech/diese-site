@@ -240,7 +240,10 @@ function Forklift({
     }
 
     const drive = (forward ? 1 : 0) - (backward ? 1 : 0);
-    if (drive !== 0 && Math.abs(forwardSpeed) < MAX_SPEED) {
+    // The speed cap only blocks accelerating further in the direction of
+    // motion — braking/reversing input must always work (review finding)
+    const braking = drive * forwardSpeed < 0;
+    if (drive !== 0 && (braking || Math.abs(forwardSpeed) < MAX_SPEED)) {
       const power = DRIVE_POWER * delta;
       rb.applyImpulse({ x: dir.x * drive * power, y: 0, z: dir.z * drive * power }, true);
     }
