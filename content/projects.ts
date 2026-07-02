@@ -107,6 +107,7 @@ export const featuredProjects: Project[] = [
     status: 'active',
     stackShort: 'React · TypeScript · Discord',
     stack: ['React', 'TypeScript', 'Discord Auth', 'Testing'],
+    live: 'https://sal-draft-league.vercel.app',
     summary: 'A public league hub and admin system for seasons, standings, rosters, drafts, and match operations.',
     synopsis:
       'A competitive gaming league was managing seasons, standings, and draft operations through Discord messages and spreadsheets — a workflow that could not scale to real player registration or public-facing results. This platform structures that into a proper operations system: public standings and schedules, admin tooling, Discord-based authentication, and multi-season draft management.',
