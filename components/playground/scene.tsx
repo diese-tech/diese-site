@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Grid, KeyboardControls, useKeyboardControls } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody, type RapierRigidBody } from '@react-three/rapier';
+import { LANDMARKS, nearestLandmark } from './landmarks';
 
 export type TouchState = {
   forward: boolean;
@@ -28,15 +29,6 @@ const CONTROL_MAP = [
 ];
 
 const ARENA = 42; // half-extent of the drivable floor
-const LANDMARK_RADIUS = 8; // proximity distance that pops the project card
-
-/** Landmark anchor points (x, z) — the set-pieces the forklift can visit. */
-const LANDMARKS: { slug: string; x: number; z: number }[] = [
-  { slug: 'brewloop', x: -18, z: -14 },
-  { slug: 'swiftdispatch', x: 18, z: -16 },
-  { slug: 'serpent-ascension-league', x: 19, z: 15 },
-  { slug: 'threetails-booking', x: -17, z: 16 },
-];
 
 function Beacon({ position }: { position: [number, number, number] }) {
   const ref = useRef<THREE.Mesh>(null);
@@ -227,16 +219,18 @@ function Forklift({
 
     const steer = (left ? 1 : 0) - (right ? 1 : 0);
     if (steer !== 0) {
-      // Reverse steering when backing up, like a real vehicle
+      // Reverse steering when backing up, like a real vehicle. Set angular
+      // velocity directly: torque impulses get eaten by ground friction,
+      // which made the forklift unable to turn (reported bug).
       const sign = drive < 0 ? -1 : 1;
-      rb.applyTorqueImpulse({ x: 0, y: steer * sign * 9 * delta, z: 0 }, true);
+      rb.setAngvel({ x: 0, y: steer * sign * 2.4, z: 0 }, true);
     }
 
     const t = rb.translation();
 
     // Lightweight telemetry + teleport hook for tests/debugging
     const w = window as unknown as Record<string, unknown>;
-    w.__fk = { x: t.x, z: t.z, fx: dir.x, fz: dir.z };
+    w.__fk = { x: t.x, z: t.z, fx: dir.x, fz: dir.z, wy: rb.angvel().y };
     if (!w.__fkTeleport) {
       w.__fkTeleport = (x: number, z: number) => {
         rb.setTranslation({ x, y: 1, z }, true);
@@ -246,17 +240,7 @@ function Forklift({
 
     // Proximity: nearest landmark within radius pops the project card
     if (onLandmark) {
-      let nearest: string | null = null;
-      let best = LANDMARK_RADIUS * LANDMARK_RADIUS;
-      for (const mark of LANDMARKS) {
-        const dx = t.x - mark.x;
-        const dz = t.z - mark.z;
-        const d2 = dx * dx + dz * dz;
-        if (d2 < best) {
-          best = d2;
-          nearest = mark.slug;
-        }
-      }
+      const nearest = nearestLandmark(t.x, t.z);
       if (nearest !== activeLandmark.current) {
         activeLandmark.current = nearest;
         onLandmark(nearest);
