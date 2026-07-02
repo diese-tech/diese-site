@@ -1,10 +1,17 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Grid, KeyboardControls, useKeyboardControls } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody, type RapierRigidBody } from '@react-three/rapier';
+
+export type TouchState = {
+  forward: boolean;
+  backward: boolean;
+  left: boolean;
+  right: boolean;
+};
 
 /* Palette (fixed hexes — the canvas doesn't participate in theming) */
 const FLOOR = '#12100d';
@@ -175,9 +182,18 @@ function CatTower({ position }: { position: [number, number, number] }) {
   );
 }
 
-function Forklift({ onLandmark }: { onLandmark?: (slug: string | null) => void }) {
+function Forklift({
+  onLandmark,
+  onReady,
+  touch,
+}: {
+  onLandmark?: (slug: string | null) => void;
+  onReady?: () => void;
+  touch?: React.RefObject<TouchState>;
+}) {
   const body = useRef<RapierRigidBody>(null);
   const activeLandmark = useRef<string | null>(null);
+  const announcedReady = useRef(false);
   const [, getKeys] = useKeyboardControls();
   const camTarget = useMemo(() => new THREE.Vector3(), []);
   const camPos = useMemo(() => new THREE.Vector3(), []);
@@ -188,7 +204,17 @@ function Forklift({ onLandmark }: { onLandmark?: (slug: string | null) => void }
     const rb = body.current;
     if (!rb) return;
 
-    const { forward, backward, left, right } = getKeys() as Record<string, boolean>;
+    if (!announcedReady.current) {
+      announcedReady.current = true;
+      onReady?.();
+    }
+
+    const keys = getKeys() as Record<string, boolean>;
+    const t2 = touch?.current;
+    const forward = keys.forward || t2?.forward;
+    const backward = keys.backward || t2?.backward;
+    const left = keys.left || t2?.left;
+    const right = keys.right || t2?.right;
     const rot = rb.rotation();
     quat.set(rot.x, rot.y, rot.z, rot.w);
     dir.set(0, 0, -1).applyQuaternion(quat);
@@ -370,18 +396,37 @@ function Arena() {
   );
 }
 
-export default function Scene({ onLandmark }: { onLandmark?: (slug: string | null) => void }) {
+export default function Scene({
+  onLandmark,
+  onReady,
+  touch,
+}: {
+  onLandmark?: (slug: string | null) => void;
+  onReady?: () => void;
+  touch?: React.RefObject<TouchState>;
+}) {
+  // Pause rendering + physics while the tab is hidden
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
   return (
     <KeyboardControls map={CONTROL_MAP}>
       <Canvas
         shadows
         dpr={[1, 1.75]}
+        performance={{ min: 0.5 }}
+        frameloop={paused ? 'never' : 'always'}
         camera={{ position: [0, 7, 11], fov: 42 }}
         className="bg-paper"
       >
         <color attach="background" args={['#0d0b09']} />
         <fog attach="fog" args={['#0d0b09', 45, 85]} />
-        <ambientLight color="#f6f4ef" intensity={0.55} />
+        <hemisphereLight args={['#c9946f', '#0d0b09', 0.35]} />
+        <ambientLight color="#f6f4ef" intensity={0.45} />
         <directionalLight
           castShadow
           color="#fff3e4"
@@ -393,9 +438,10 @@ export default function Scene({ onLandmark }: { onLandmark?: (slug: string | nul
           shadow-camera-top={30}
           shadow-camera-bottom={-30}
         />
-        <Physics>
+        <directionalLight color="#c96f4a" intensity={0.25} position={[-18, 8, -14]} />
+        <Physics paused={paused}>
           <Arena />
-          <Forklift onLandmark={onLandmark} />
+          <Forklift onLandmark={onLandmark} onReady={onReady} touch={touch} />
         </Physics>
       </Canvas>
     </KeyboardControls>
