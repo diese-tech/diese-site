@@ -67,7 +67,7 @@ export const featuredProjects: Project[] = [
       users:
         'Owner-operators and dispatch staff at small HVAC companies, the technicians they assign in the field, and the customers waiting on arrival windows and quote approvals.',
       solution:
-        'A structured dispatch system built around the actual lifecycle of a job. Work flows from customer intake through quote approval, technician assignment, and completion, with each transition enforced by state-machine logic rather than convention. Dispatch staff get a single back-office view of the day; technicians and customers get real-time SMS updates without installing anything.',
+        'I built the dispatch system around the actual lifecycle of a job. Work flows from customer intake through quote approval, technician assignment, and completion, with each transition enforced by state-machine logic rather than convention. Dispatch staff get a single back-office view of the day; technicians and customers get real-time SMS updates without installing anything.',
       keyFeatures: [
         'Live dispatch board with job status driven by explicit state-machine logic',
         'Customer intake and quote approval flow',
@@ -122,7 +122,7 @@ export const featuredProjects: Project[] = [
       users:
         'League admins running seasons and drafts, competing players and team captains, and spectators who want current standings and schedules without joining the Discord server.',
       solution:
-        'A proper operations platform for the league. A public hub serves standings, schedules, teams, players, and watch pages, backed by admin tooling for registrations, season management, and multi-season drafts. Discord stays the community home — authentication is Discord-based — but the operational record lives in the platform instead of scroll-back.',
+        'I built the league a proper operations platform. A public hub serves standings, schedules, teams, players, and watch pages, backed by admin tooling for registrations, season management, and multi-season drafts. Discord stays the community home — authentication is Discord-based — but the operational record lives in the platform instead of scroll-back.',
       keyFeatures: [
         'Public standings, schedule, teams, players, and watch pages',
         'Player registration with Discord-based authentication',
@@ -174,7 +174,7 @@ export const featuredProjects: Project[] = [
       users:
         'Guests booking visits — usually on a phone — and the owner, who needs the business rules enforced automatically rather than by reading every reservation after the fact.',
       solution:
-        'A custom booking flow built exactly around the business rules. The calendar only surfaces valid options: time-of-day blocks with capacity remaining and party sizes within limits. Guests acknowledge the rules agreement before checkout, pay through Square, and receive automated email confirmations. Invalid bookings are unselectable, not merely rejected.',
+        'I built the booking flow exactly around the business rules. The calendar only surfaces valid options: time-of-day blocks with capacity remaining and party sizes within limits. Guests acknowledge the rules agreement before checkout, pay through Square, and receive automated email confirmations. Invalid bookings are unselectable, not merely rejected.',
       keyFeatures: [
         'Smart calendar that only offers bookable time-of-day blocks with remaining capacity',
         'Party-size and time-of-day constraints enforced at selection time, not at review time',
