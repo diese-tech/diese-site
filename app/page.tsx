@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ArrowUpRight, FileText, Mail } from 'lucide-react';
-import { BuilderConsole } from '@/components/builder-console';
 import { ContributionCalendarGrid } from '@/components/contribution-calendar';
 import { GithubIcon, LinkedinIcon } from '@/components/icons';
 import { MacWindow } from '@/components/mac-window';
@@ -223,9 +222,69 @@ export default async function Home() {
             </MacWindow>
           </Reveal>
 
-          {/* builder-console (playground teaser slot — see R5) */}
+          {/* playground.app teaser */}
           <Reveal>
-            <BuilderConsole />
+            <MacWindow
+              title="playground.app"
+              toolbar={
+                <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-ok">
+                  ● 3D
+                </span>
+              }
+            >
+              <Link href="/playground" className="group block">
+                <div className="relative h-[220px] overflow-hidden bg-void">
+                  {/* Layered backdrop echoing the ops floor */}
+                  <div
+                    className="absolute inset-0"
+                    aria-hidden="true"
+                    style={{
+                      background:
+                        'radial-gradient(500px 260px at 70% 20%, rgba(201, 111, 74, 0.22), transparent 65%)',
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 opacity-[0.07]"
+                    aria-hidden="true"
+                    style={{
+                      backgroundImage:
+                        'linear-gradient(to right, #f6f4ef 1px, transparent 1px), linear-gradient(to bottom, #f6f4ef 1px, transparent 1px)',
+                      backgroundSize: '40px 40px',
+                      transform: 'perspective(400px) rotateX(45deg) translateY(40px) scale(1.6)',
+                      transformOrigin: 'center bottom',
+                    }}
+                  />
+                  {/* Block silhouettes */}
+                  <div
+                    className="absolute right-14 bottom-10 h-10 w-14 bg-signal/80 rounded-[3px] transition-transform duration-[240ms] group-hover:-translate-y-1"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute right-24 bottom-8 h-7 w-8 bg-cream/70 rounded-[3px]"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute right-8 bottom-8 h-6 w-7 bg-cream/30 rounded-[3px]"
+                    aria-hidden="true"
+                  />
+                  {/* Copy */}
+                  <div className="relative p-6 md:p-7">
+                    <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-signal-stamp brightness-150 mb-3">
+                      The ops floor
+                    </div>
+                    <div className="font-grotesk font-semibold text-xl text-cream max-w-[22ch] leading-tight">
+                      Drive a forklift. Bump into my projects.
+                    </div>
+                    <div className="mt-4 inline-block font-grotesk font-semibold text-sm text-cream border-b-2 border-signal pb-0.5 group-hover:text-signal transition-colors duration-[120ms]">
+                      Enter the playground →
+                    </div>
+                    <div className="mt-3 font-mono text-[10px] tracking-[0.08em] uppercase text-cream/40">
+                      WebGL · desktop recommended
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </MacWindow>
           </Reveal>
 
           {/* contact */}

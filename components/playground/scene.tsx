@@ -21,9 +21,163 @@ const CONTROL_MAP = [
 ];
 
 const ARENA = 42; // half-extent of the drivable floor
+const LANDMARK_RADIUS = 8; // proximity distance that pops the project card
 
-function Forklift() {
+/** Landmark anchor points (x, z) — the set-pieces the forklift can visit. */
+const LANDMARKS: { slug: string; x: number; z: number }[] = [
+  { slug: 'brewloop', x: -18, z: -14 },
+  { slug: 'swiftdispatch', x: 18, z: -16 },
+  { slug: 'serpent-ascension-league', x: 19, z: 15 },
+  { slug: 'threetails-booking', x: -17, z: 16 },
+];
+
+function Beacon({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    if (!ref.current) return;
+    ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 1.6) * 0.25;
+    ref.current.rotation.y = state.clock.elapsedTime * 0.8;
+  });
+  return (
+    <mesh ref={ref} position={position}>
+      <boxGeometry args={[0.45, 0.45, 0.45]} />
+      <meshStandardMaterial color={RUST} emissive={RUST} emissiveIntensity={0.55} />
+    </mesh>
+  );
+}
+
+/** BrewLoop — café stand with awning and a cup on the counter. */
+function CafeStand({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <RigidBody type="fixed" colliders="cuboid">
+        <mesh castShadow receiveShadow position={[0, 0.9, 0]}>
+          <boxGeometry args={[4.2, 1.8, 1.7]} />
+          <meshStandardMaterial color={CREAM} roughness={0.85} />
+        </mesh>
+        {[-1.9, 1.9].map((x) => (
+          <mesh key={x} castShadow position={[x, 2.4, -0.7]}>
+            <boxGeometry args={[0.16, 3, 0.16]} />
+            <meshStandardMaterial color={INK} roughness={0.9} />
+          </mesh>
+        ))}
+        <mesh castShadow position={[0, 3.7, -0.25]} rotation={[0.16, 0, 0]}>
+          <boxGeometry args={[4.8, 0.14, 2.2]} />
+          <meshStandardMaterial color={RUST} roughness={0.8} />
+        </mesh>
+      </RigidBody>
+      {/* Cup — dynamic, knockable */}
+      <RigidBody position={[1.1, 2.3, 0.25]} colliders="cuboid">
+        <mesh castShadow>
+          <cylinderGeometry args={[0.28, 0.22, 0.55, 14]} />
+          <meshStandardMaterial color={RUST} roughness={0.7} />
+        </mesh>
+      </RigidBody>
+      <Beacon position={[0, 5.2, 0]} />
+    </group>
+  );
+}
+
+/** SwiftDispatch — service van. */
+function DispatchVan({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <RigidBody type="fixed" colliders="cuboid">
+        <mesh castShadow receiveShadow position={[0, 1.5, 0.4]}>
+          <boxGeometry args={[2.3, 2.2, 4]} />
+          <meshStandardMaterial color={CREAM} roughness={0.8} />
+        </mesh>
+        <mesh castShadow position={[0, 1.05, -2.6]}>
+          <boxGeometry args={[2.3, 1.3, 1.6]} />
+          <meshStandardMaterial color={RUST} roughness={0.75} />
+        </mesh>
+        <mesh castShadow position={[0, 2.75, -2.5]}>
+          <boxGeometry args={[0.8, 0.25, 0.5]} />
+          <meshStandardMaterial color={RUST} emissive={RUST} emissiveIntensity={0.3} />
+        </mesh>
+        {(
+          [
+            [-1.15, 0.45, -2.4],
+            [1.15, 0.45, -2.4],
+            [-1.15, 0.45, 1.6],
+            [1.15, 0.45, 1.6],
+          ] as const
+        ).map(([x, y, z]) => (
+          <mesh key={`${x}${z}`} castShadow position={[x, y, z]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.45, 0.45, 0.3, 16]} />
+            <meshStandardMaterial color="#0c0a08" roughness={0.9} />
+          </mesh>
+        ))}
+      </RigidBody>
+      <Beacon position={[0, 4.6, 0]} />
+    </group>
+  );
+}
+
+/** Serpent Ascension League — arena plinth with pillars and a banner ring. */
+function LeagueArena({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <RigidBody type="fixed" colliders="cuboid">
+        <mesh castShadow receiveShadow position={[0, 0.35, 0]}>
+          <cylinderGeometry args={[3.4, 3.7, 0.7, 24]} />
+          <meshStandardMaterial color={INK} roughness={0.9} />
+        </mesh>
+        {[0, 1, 2, 3].map((i) => {
+          const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+          return (
+            <mesh
+              key={i}
+              castShadow
+              position={[Math.cos(angle) * 2.7, 2.1, Math.sin(angle) * 2.7]}
+            >
+              <boxGeometry args={[0.45, 3.4, 0.45]} />
+              <meshStandardMaterial color={CREAM} roughness={0.85} />
+            </mesh>
+          );
+        })}
+      </RigidBody>
+      <mesh position={[0, 3.9, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.7, 0.14, 10, 40]} />
+        <meshStandardMaterial color={RUST} emissive={RUST} emissiveIntensity={0.35} />
+      </mesh>
+      <Beacon position={[0, 5.4, 0]} />
+    </group>
+  );
+}
+
+/** ThreeTails — cat tower with ears. */
+function CatTower({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <RigidBody type="fixed" colliders="cuboid">
+        <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
+          <cylinderGeometry args={[1.4, 1.7, 1, 18]} />
+          <meshStandardMaterial color={INK} roughness={0.9} />
+        </mesh>
+        <mesh castShadow position={[0, 1.9, 0]}>
+          <boxGeometry args={[1.5, 1.8, 1.5]} />
+          <meshStandardMaterial color={CREAM} roughness={0.85} />
+        </mesh>
+        <mesh castShadow position={[0, 3.15, 0]}>
+          <cylinderGeometry args={[1.3, 1.3, 0.35, 18]} />
+          <meshStandardMaterial color={RUST} roughness={0.8} />
+        </mesh>
+        {[-0.55, 0.55].map((x) => (
+          <mesh key={x} castShadow position={[x, 3.75, 0]} rotation={[0, 0, x < 0 ? 0.3 : -0.3]}>
+            <coneGeometry args={[0.32, 0.75, 4]} />
+            <meshStandardMaterial color={RUST} roughness={0.8} />
+          </mesh>
+        ))}
+      </RigidBody>
+      <Beacon position={[0, 5.1, 0]} />
+    </group>
+  );
+}
+
+function Forklift({ onLandmark }: { onLandmark?: (slug: string | null) => void }) {
   const body = useRef<RapierRigidBody>(null);
+  const activeLandmark = useRef<string | null>(null);
   const [, getKeys] = useKeyboardControls();
   const camTarget = useMemo(() => new THREE.Vector3(), []);
   const camPos = useMemo(() => new THREE.Vector3(), []);
@@ -52,8 +206,38 @@ function Forklift() {
       rb.applyTorqueImpulse({ x: 0, y: steer * sign * 9 * delta, z: 0 }, true);
     }
 
-    // Follow camera: sit behind and above the forklift, ease toward it
     const t = rb.translation();
+
+    // Lightweight telemetry + teleport hook for tests/debugging
+    const w = window as unknown as Record<string, unknown>;
+    w.__fk = { x: t.x, z: t.z, fx: dir.x, fz: dir.z };
+    if (!w.__fkTeleport) {
+      w.__fkTeleport = (x: number, z: number) => {
+        rb.setTranslation({ x, y: 1, z }, true);
+        rb.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      };
+    }
+
+    // Proximity: nearest landmark within radius pops the project card
+    if (onLandmark) {
+      let nearest: string | null = null;
+      let best = LANDMARK_RADIUS * LANDMARK_RADIUS;
+      for (const mark of LANDMARKS) {
+        const dx = t.x - mark.x;
+        const dz = t.z - mark.z;
+        const d2 = dx * dx + dz * dz;
+        if (d2 < best) {
+          best = d2;
+          nearest = mark.slug;
+        }
+      }
+      if (nearest !== activeLandmark.current) {
+        activeLandmark.current = nearest;
+        onLandmark(nearest);
+      }
+    }
+
+    // Follow camera: sit behind and above the forklift, ease toward it
     camTarget.set(t.x, t.y + 1, t.z);
     camPos.set(t.x - dir.x * 11, t.y + 7, t.z - dir.z * 11);
     state.camera.position.lerp(camPos, Math.min(1, delta * 3.5));
@@ -170,18 +354,23 @@ function Arena() {
           </mesh>
         </RigidBody>
       ))}
-      {/* Crates to shove around (landmarks arrive in R5b) */}
+      {/* Crates to shove around */}
       <Crate position={[6, 2, -8]} color={CREAM} />
       <Crate position={[6.6, 3.4, -8.2]} size={0.8} color={RUST} />
-      <Crate position={[-9, 2, -14]} size={1.4} color={INK} />
-      <Crate position={[12, 2, 6]} size={1.2} color={RUST} />
-      <Crate position={[-14, 2, 10]} color={CREAM} />
-      <Crate position={[2, 2, 16]} size={0.9} color={INK} />
+      <Crate position={[-9, 2, -6]} size={1.4} color={INK} />
+      <Crate position={[10, 2, 6]} size={1.2} color={RUST} />
+      <Crate position={[-8, 2, 9]} color={CREAM} />
+      <Crate position={[2, 2, 12]} size={0.9} color={INK} />
+      {/* Project landmarks */}
+      <CafeStand position={[-18, 0, -14]} />
+      <DispatchVan position={[18, 0, -16]} />
+      <LeagueArena position={[19, 0, 15]} />
+      <CatTower position={[-17, 0, 16]} />
     </>
   );
 }
 
-export default function Scene() {
+export default function Scene({ onLandmark }: { onLandmark?: (slug: string | null) => void }) {
   return (
     <KeyboardControls map={CONTROL_MAP}>
       <Canvas
@@ -206,7 +395,7 @@ export default function Scene() {
         />
         <Physics>
           <Arena />
-          <Forklift />
+          <Forklift onLandmark={onLandmark} />
         </Physics>
       </Canvas>
     </KeyboardControls>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { MacWindow } from '@/components/mac-window';
-import { featuredProjects } from '@/content/projects';
+import { allProjects, featuredProjects } from '@/content/projects';
 
 const Scene = dynamic(() => import('./scene'), {
   ssr: false,
@@ -32,6 +32,8 @@ function webglAvailable() {
  */
 export function PlaygroundClient() {
   const [mode, setMode] = useState<'checking' | 'scene' | 'poster'>('checking');
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const activeProject = activeSlug ? allProjects.find((p) => p.slug === activeSlug) : null;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -84,7 +86,29 @@ export function PlaygroundClient() {
 
   return (
     <main className="relative w-full" style={{ height: 'calc(100dvh - 58px)' }}>
-      <Scene />
+      <Scene onLandmark={setActiveSlug} />
+      {/* Proximity project card */}
+      {activeProject && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center px-5">
+          <div className="pointer-events-auto w-full max-w-md rounded-lg border border-rule bg-paper-panel/95 p-5 backdrop-blur-sm shadow-[0_18px_40px_-24px_rgba(0,0,0,0.6)]">
+            <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-signal mb-1.5">
+              {activeProject.ref} · {activeProject.domain}
+            </div>
+            <div className="font-grotesk font-semibold text-lg text-ink leading-tight">
+              {activeProject.title}
+            </div>
+            <p className="font-sans text-[13px] leading-[1.5] text-ink-muted mt-1.5">
+              {activeProject.summary}
+            </p>
+            <Link
+              href={`/projects/${activeProject.slug}`}
+              className="inline-block mt-3 font-grotesk font-semibold text-sm text-ink border-b-2 border-signal pb-0.5 hover:text-signal transition-colors duration-[120ms]"
+            >
+              Open case file →
+            </Link>
+          </div>
+        </div>
+      )}
       {/* HTML HUD — navigation never lives in the canvas */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5">
         <div className="pointer-events-auto rounded-lg border border-rule bg-paper-panel/85 px-4 py-2.5 font-mono text-[11px] tracking-[0.08em] uppercase text-ink-muted backdrop-blur-sm">
