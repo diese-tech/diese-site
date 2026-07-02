@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { ArrowUpRight, FileText, Mail } from 'lucide-react';
 import { BuilderConsole } from '@/components/builder-console';
+import { ContributionCalendarGrid } from '@/components/contribution-calendar';
 import { GithubIcon, LinkedinIcon } from '@/components/icons';
 import { MacWindow } from '@/components/mac-window';
 import { Reveal } from '@/components/reveal';
 import { experience } from '@/content/experience';
 import { allProjects } from '@/content/projects';
 import { site } from '@/content/site';
+import { getContributions } from '@/lib/github';
 
 const socials = [
   { label: 'GitHub', href: site.github, Icon: GithubIcon },
@@ -17,7 +19,9 @@ const socials = [
 
 const listedProjects = allProjects.filter((p) => p.status !== 'placeholder');
 
-export default function Home() {
+export default async function Home() {
+  const contributions = await getContributions();
+
   return (
     <main className="mx-auto max-w-content px-6 md:px-10">
       <div className="lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-14">
@@ -154,6 +158,27 @@ export default function Home() {
               </ul>
             </MacWindow>
           </Reveal>
+
+          {/* github.stats — renders only when contribution data is available */}
+          {contributions && (
+            <Reveal>
+              <MacWindow
+                title="github.stats"
+                toolbar={
+                  <a
+                    href={site.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-[10px] tracking-[0.08em] uppercase text-ink-faint hover:text-signal transition-colors duration-[120ms]"
+                  >
+                    @diese-tech ↗
+                  </a>
+                }
+              >
+                <ContributionCalendarGrid calendar={contributions} />
+              </MacWindow>
+            </Reveal>
+          )}
 
           {/* experience.log */}
           <Reveal>
