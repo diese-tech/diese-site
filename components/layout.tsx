@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { site } from '@/content/site';
 
 export function Header() {
@@ -25,12 +26,15 @@ export function Header() {
             Discord
           </Link>
         </div>
-        <a
-          href={site.resume}
-          className="font-mono text-xs tracking-[0.08em] uppercase text-signal border-b border-signal pb-px hover:border-b-2 transition-all duration-[120ms]"
-        >
-          Resume
-        </a>
+        <div className="flex items-center gap-4">
+          <a
+            href={site.resume}
+            className="font-mono text-xs tracking-[0.08em] uppercase text-signal border-b border-signal pb-px hover:border-b-2 transition-all duration-[120ms]"
+          >
+            Resume
+          </a>
+          <ThemeToggle />
+        </div>
       </nav>
     </header>
   );
