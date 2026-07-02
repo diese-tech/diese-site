@@ -30,6 +30,14 @@ const CONTROL_MAP = [
 
 const ARENA = 42; // half-extent of the drivable floor
 
+/* Driving feel */
+const DRIVE_POWER = 90; // impulse per second along the nose
+const MAX_SPEED = 13; // u/s cap so the arena stays controllable
+const MAX_YAW = 2.4; // rad/s at full steering authority
+const FULL_TURN_SPEED = 4; // u/s at which steering reaches full authority
+const IDLE_TURN = 0.35; // fraction of yaw available when stationary
+const GRIP = 7; // how quickly momentum realigns with the heading
+
 function Beacon({ position }: { position: [number, number, number] }) {
   const ref = useRef<THREE.Mesh>(null);
   useFrame((state) => {
@@ -211,19 +219,41 @@ function Forklift({
     quat.set(rot.x, rot.y, rot.z, rot.w);
     dir.set(0, 0, -1).applyQuaternion(quat);
 
+    const vel = rb.linvel();
+    // Signed speed along the nose: positive = moving forward
+    const forwardSpeed = vel.x * dir.x + vel.z * dir.z;
+
+    // Grip first: pull velocity toward the heading so momentum follows the
+    // nose — this is what makes steering feel like turning rather than
+    // rotating. Must run BEFORE the drive impulse, or setLinvel with the
+    // frame-start velocity silently cancels the acceleration.
+    if (Math.abs(forwardSpeed) > 0.1) {
+      const k = Math.min(1, delta * GRIP);
+      rb.setLinvel(
+        {
+          x: vel.x + (dir.x * forwardSpeed - vel.x) * k,
+          y: vel.y,
+          z: vel.z + (dir.z * forwardSpeed - vel.z) * k,
+        },
+        true
+      );
+    }
+
     const drive = (forward ? 1 : 0) - (backward ? 1 : 0);
-    if (drive !== 0) {
-      const power = 42 * delta;
+    if (drive !== 0 && Math.abs(forwardSpeed) < MAX_SPEED) {
+      const power = DRIVE_POWER * delta;
       rb.applyImpulse({ x: dir.x * drive * power, y: 0, z: dir.z * drive * power }, true);
     }
 
     const steer = (left ? 1 : 0) - (right ? 1 : 0);
     if (steer !== 0) {
-      // Reverse steering when backing up, like a real vehicle. Set angular
-      // velocity directly: torque impulses get eaten by ground friction,
-      // which made the forklift unable to turn (reported bug).
-      const sign = drive < 0 ? -1 : 1;
-      rb.setAngvel({ x: 0, y: steer * sign * 2.4, z: 0 }, true);
+      // Reverse steering when backing up, like a real vehicle. Yaw authority
+      // scales with speed so the forklift carves arcs instead of spinning in
+      // place (with a little in-place authority kept for maneuvering).
+      const sign = forwardSpeed < -0.3 ? -1 : 1;
+      const speedFactor = Math.min(1, Math.abs(forwardSpeed) / FULL_TURN_SPEED);
+      const yaw = steer * sign * MAX_YAW * (IDLE_TURN + (1 - IDLE_TURN) * speedFactor);
+      rb.setAngvel({ x: 0, y: yaw, z: 0 }, true);
     }
 
     const t = rb.translation();
@@ -259,7 +289,7 @@ function Forklift({
       ref={body}
       position={[0, 1, 0]}
       colliders={false}
-      linearDamping={1.6}
+      linearDamping={1.0}
       angularDamping={3}
       enabledRotations={[false, true, false]}
     >
