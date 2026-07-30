@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Dustin Nieves — Software for the systems that actually run.';
+export const alt = 'Dustin Nieves | Software and operations';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -61,7 +61,7 @@ export default function OpengraphImage() {
                 color: inkFaint,
               }}
             >
-              dustin@diese — portfolio
+              dustin@diese | portfolio
             </div>
           </div>
 

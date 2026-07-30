@@ -131,7 +131,7 @@ export function BuilderConsole() {
         };
       })
       .catch(() => {
-        /* three failed to load — the HTML fallback stays in place */
+        /* three failed to load, so the HTML fallback stays in place */
       });
 
     return () => {

@@ -30,7 +30,7 @@ const TOUCH_BUTTONS: { key: keyof TouchState; label: string; cluster: 'steer' | 
 
 /**
  * Gate for the 3D playground: loads the scene when WebGL is available and
- * reduced motion isn't requested — touch devices get on-screen controls.
+ * reduced motion is not requested. Touch devices get on-screen controls.
  * Everyone else gets the poster with normal links. The scene bundle loads
  * lazily so the rest of the site never pays for it.
  */
@@ -71,7 +71,7 @@ export function PlaygroundClient() {
           <p className="font-sans text-[15px] leading-[1.65] text-ink-muted max-w-[58ch] mt-4">
             {mode === 'checking'
               ? 'Checking what this device can do…'
-              : 'It needs WebGL and motion — so it sits this device out. The projects it showcases are all one click away instead:'}
+              : 'It needs WebGL and motion, so it sits this device out. The projects it showcases are all one click away instead:'}
           </p>
           <ul className="mt-6 flex flex-col gap-2">
             {featuredProjects.map((project) => (
@@ -80,7 +80,7 @@ export function PlaygroundClient() {
                   href={`/projects/${project.slug}`}
                   className="font-mono text-xs tracking-[0.06em] uppercase text-ink-muted border-b border-rule pb-px hover:text-signal hover:border-signal transition-colors duration-[120ms]"
                 >
-                  {project.ref} — {project.title}
+                  {project.ref} | {project.title}
                 </Link>
               </li>
             ))}
@@ -133,7 +133,7 @@ export function PlaygroundClient() {
         </div>
       )}
 
-      {/* HTML HUD — navigation never lives in the canvas */}
+      {/* HTML HUD. Navigation never lives in the canvas. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5">
         <div className="pointer-events-auto rounded-lg border border-rule bg-paper-panel/85 px-4 py-2.5 font-mono text-[11px] tracking-[0.08em] uppercase text-ink-muted backdrop-blur-sm">
           {showTouchControls ? 'Use the on-screen controls' : 'WASD / arrows to drive'}

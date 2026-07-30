@@ -16,7 +16,7 @@ const socials = [
   { label: 'Resume', href: site.resume, Icon: FileText },
 ];
 
-const listedProjects = allProjects.filter((p) => p.status !== 'placeholder');
+const listedProjects = allProjects;
 
 export default async function Home() {
   const contributions = await getContributions();
@@ -39,8 +39,8 @@ export default async function Home() {
           </div>
 
           <p className="font-sans text-[15px] leading-[1.6] text-ink-muted mt-5 max-w-[38ch]">
-            Ops analyst by day, builder the rest of the time. I ship tools and small SaaS
-            products that real businesses actually run on.
+            I spent years working in operations and systems administration. Now I build software,
+            usually around workflows I have dealt with myself.
           </p>
 
           <div className="flex items-center gap-2 mt-6 font-mono text-[11px] tracking-[0.08em] uppercase">
@@ -73,20 +73,18 @@ export default async function Home() {
             <div id="about" className="scroll-mt-24" />
             <MacWindow title="about.txt" bodyClassName="p-6 md:p-7">
               <p className="font-sans text-[15px] leading-[1.65] text-ink-muted max-w-[68ch]">
-                I&apos;m an operations analyst turned software developer. The ops background means
-                I frame the problem first — I map the messy workflow before I write a line of
-                code.
+                I did not start out in software. I came from operations and systems administration,
+                first in the Marine Corps and later at Disney.
               </p>
               <p className="font-sans text-[15px] leading-[1.65] text-ink-muted max-w-[68ch] mt-4">
-                These days I build tools, dashboards, automation, and small SaaS products that
-                run actual business processes: dispatch software for HVAC teams, QR ordering for
-                cafes, league operations for a gaming community. Full-stack, biased toward
-                maintainable systems and clean data modeling.
+                Now I build things that let me pull those workflows apart and put them back
+                together in code. That has turned into web apps, Discord bots, and a few local
+                experiments. Some are live demos. Some are still rough.
               </p>
               <p className="font-sans text-[15px] leading-[1.65] text-ink-muted max-w-[68ch] mt-4">
-                Before this: eight years in enterprise IT operations at Disney, and a Marine
-                Corps tour as a systems administrator before that. That&apos;s where the respect
-                for software that just works comes from.
+                Altogether, I have about eight years of operations experience. My Disney experience
+                started in 2021, after my time in the Marine Corps. They were very different jobs,
+                but both shaped how I think about systems and the people using them.
               </p>
             </MacWindow>
           </Reveal>
@@ -98,7 +96,7 @@ export default async function Home() {
               title="projects/"
               toolbar={
                 <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-ink-faint">
-                  {listedProjects.length} shipped
+                  {listedProjects.length} projects
                 </span>
               }
             >
@@ -121,7 +119,7 @@ export default async function Home() {
                           />
                         </Link>
                         <p className="font-sans text-[13px] leading-[1.55] text-ink-muted mt-1 max-w-[60ch]">
-                          {project.summary}
+                          {project.cardDescription}
                         </p>
                         <div className="font-mono text-[10px] tracking-[0.06em] uppercase text-ink-faint mt-2.5">
                           {project.stackShort} · {project.year}
@@ -158,7 +156,7 @@ export default async function Home() {
             </MacWindow>
           </Reveal>
 
-          {/* github.stats — renders only when contribution data is available */}
+          {/* github.stats renders only when contribution data is available */}
           {contributions && (
             <Reveal>
               <MacWindow
@@ -202,7 +200,7 @@ export default async function Home() {
                       </div>
                       <div className="font-sans text-[13px] text-ink-muted mt-0.5">
                         {entry.org}
-                        {entry.unit ? ` — ${entry.unit}` : ''}
+                        {entry.unit ? ` | ${entry.unit}` : ''}
                       </div>
                       <p className="font-sans text-[13px] leading-[1.55] text-ink-faint mt-1.5 max-w-[60ch]">
                         {entry.summary}
@@ -292,9 +290,8 @@ export default async function Home() {
             <div id="contact" className="scroll-mt-24" />
             <MacWindow title="contact" bodyClassName="p-6 md:p-7">
               <p className="font-sans text-[15px] leading-[1.65] text-ink-muted max-w-[62ch]">
-                Got a messy workflow, or a team that needs software it&apos;ll actually use?
-                I&apos;m open to product-minded development roles and select freelance projects.
-                Email is the fastest way to reach me.
+                If you want to talk about one of these projects or ask what I am working on,
+                email is the easiest way to reach me.
               </p>
               <div className="flex flex-wrap gap-x-7 gap-y-3 mt-6 font-mono text-xs tracking-[0.06em] uppercase">
                 <a

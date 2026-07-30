@@ -24,7 +24,9 @@ describe('experience content', () => {
       expect(entry.org.length).toBeGreaterThan(0);
       expect(entry.role.length).toBeGreaterThan(0);
       expect(entry.summary.length).toBeGreaterThan(0);
-      expect(entry.period).toMatch(/^\d{4} — (present|\d{4})$/);
+      expect(entry.period).toMatch(
+        /^(January|February|March|April|May|June|July|August|September|October|November|December) \d{4} - (present|(January|February|March|April|May|June|July|August|September|October|November|December) \d{4})$/,
+      );
       expect(entry.mark.length).toBeLessThanOrEqual(3);
     }
   });

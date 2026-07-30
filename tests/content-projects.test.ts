@@ -36,12 +36,15 @@ describe('projects content integrity', () => {
       expect(p.domain.length, p.slug).toBeGreaterThan(0);
       expect(p.role.length, p.slug).toBeGreaterThan(0);
       expect(p.summary.length, p.slug).toBeGreaterThan(0);
-      expect(p.synopsis.length, p.slug).toBeGreaterThan(0);
+      expect(p.cardDescription.length, p.slug).toBeGreaterThan(0);
+      expect(p.introduction.length, p.slug).toBeGreaterThan(0);
       expect(p.stackShort.length, p.slug).toBeGreaterThan(0);
       expect(p.stack.length, p.slug).toBeGreaterThan(0);
-      expect(p.outcomes.length, p.slug).toBeGreaterThan(0);
-      expect(p.year, p.slug).toMatch(/^\d{4}$/);
-      expect(['active', 'archived', 'placeholder']).toContain(p.status);
+      expect(p.features.length, p.slug).toBeGreaterThan(0);
+      expect(p.year, p.slug).toBe('2026');
+      expect(['active', 'experimental']).toContain(p.status);
+      expect(p.facts.projectName).toBe(p.title);
+      expect(p.facts.created).toBe('2026');
     }
   });
 
@@ -52,28 +55,43 @@ describe('projects content integrity', () => {
     }
   });
 
-  it('keeps case studies structurally complete', () => {
-    const withCase = allProjects.filter((p) => p.caseStudy);
-    expect(withCase.length).toBeGreaterThanOrEqual(3);
-    for (const p of withCase) {
-      const cs = p.caseStudy!;
-      expect(cs.problem.length, p.slug).toBeGreaterThan(0);
-      expect(cs.users.length, p.slug).toBeGreaterThan(0);
-      expect(cs.solution.length, p.slug).toBeGreaterThan(0);
-      expect(cs.keyFeatures.length, p.slug).toBeGreaterThan(0);
-      expect(cs.technicalDecisions.length, p.slug).toBeGreaterThan(0);
-      expect(cs.challenges.length, p.slug).toBeGreaterThan(0);
-      expect(cs.improvements.length, p.slug).toBeGreaterThan(0);
-      for (const exhibit of cs.exhibits ?? []) {
-        expect(exhibit.title.length, p.slug).toBeGreaterThan(0);
-        expect(exhibit.caption.length, p.slug).toBeGreaterThan(0);
-      }
+  it('keeps every public project grounded in a complete fact record', () => {
+    for (const p of allProjects) {
+      expect(p.facts.projectType.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.whyIStartedIt.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.whatCurrentlyWorks.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.techActuallyUsed.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.myRole.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.whoHasUsedIt.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.currentStatus.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.repository).toBe(p.repo);
+      expect(p.facts.factsIAmComfortableStating.length, p.slug).toBeGreaterThan(0);
+      expect(p.facts.claimsThatMustNotBeMade.length, p.slug).toBeGreaterThan(0);
     }
   });
 
-  it('only the placeholder record hides from public routes', () => {
-    const placeholders = allProjects.filter((p) => p.status === 'placeholder');
-    expect(placeholders).toHaveLength(1);
-    expect(placeholders[0].slug).toBe('private-ops-tool');
+  it('keeps audit language out of public project copy', () => {
+    for (const p of allProjects) {
+      const publicCopy = [
+        p.summary,
+        p.cardDescription,
+        p.introduction,
+        ...p.features,
+        ...p.stillWorkingOn,
+        p.technicalNote,
+        p.usageNote ?? '',
+        p.facts.currentStatus,
+      ].join(' ');
+
+      expect(publicCopy, p.slug).not.toContain('[VERIFY]');
+      expect(publicCopy, p.slug).not.toContain('—');
+    }
+  });
+
+  it('shows a usage story only when an audience is confirmed', () => {
+    expect(allProjects.filter((p) => p.usageNote).map((p) => p.slug)).toEqual([
+      'godforge',
+      'yaphub',
+    ]);
   });
 });

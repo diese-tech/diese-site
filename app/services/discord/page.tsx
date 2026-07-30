@@ -1,57 +1,50 @@
 import type { Metadata } from 'next';
+import { allProjects } from '@/content/projects';
 
 export const metadata: Metadata = {
-  title: 'Discord automation services',
-  description:
-    'Discord automation and setup help for gaming communities, streamers, amateur leagues, and online groups.',
+  title: 'Discord work',
+  description: 'Discord setup, automation, and focused bot work.',
 };
 
 const offerings = [
   [
-    'Server Cleanup',
-    'Clean up messy roles, channels, permissions, categories, and onboarding so your server feels easier to use.',
-    'Starting at $75',
+    'Server setup',
+    'Roles, channels, permissions, and the small choices that make a server easier to use.',
   ],
   [
-    'Automation Setup',
-    'Set up tickets, welcome flows, announcements, event reminders, role menus, moderation helpers, and repeatable admin workflows.',
-    'Starting at $150',
+    'Automation',
+    'Tickets, announcements, reminders, role menus, and repeated work that is easier to let a bot handle.',
   ],
   [
-    'Mini Custom Bot',
-    'Build a focused Discord bot feature — a randomizer, signup tracker, match helper, leaderboard, or command workflow.',
-    'Starting at $250',
+    'Bot work',
+    'Bots for randomizers, signups, matches, and the odd community idea that needs its own command.',
   ],
 ];
 
-const examples = [
-  'GodForge — a Discord bot for gaming communities with randomization, draft helpers, role-based commands, and match support.',
-  'League Draft Tools — draft and league management experiments for amateur competitive gaming communities.',
-  'ForgeLens — match and stat tracking for Smite 2 communities managing results, seasons, and player data.',
-];
+const exampleSlugs = new Set(['godforge', 'yaphub', 'serpent-ascension-league']);
+const examples = allProjects.filter((project) => exampleSlugs.has(project.slug));
 
 export default function DiscordServices() {
   return (
     <main className="mx-auto max-w-content px-6 md:px-10 py-12 md:py-16">
-      {/* Header */}
       <div className="border-b border-rule-strong pb-12 mb-12">
         <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-signal mb-5">
-          Services · Discord
+          Discord work
         </div>
         <h1 className="font-grotesk font-semibold text-[28px] md:text-[34px] tracking-[-0.015em] leading-[1.1] text-ink mb-6 max-w-[28ch]">
-          I help Discord communities stop doing admin work manually.
+          I build Discord tools for gaming communities.
         </h1>
         <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch] mb-8">
-          I set up clean Discord servers, roles, channels, onboarding, ticket systems, announcements,
-          and lightweight custom bot workflows for gaming groups, streamers, leagues, and online
-          communities.
+          Most of these projects started because I wanted something specific and could not find a
+          bot that handled it the way I wanted. That has included temporary voice rooms,
+          randomizers, drafts, league tools, and the setup work around them.
         </p>
         <div className="flex flex-wrap gap-5 font-mono text-xs tracking-[0.06em] uppercase">
           <a
             href="mailto:nievesdustinl@yahoo.com"
             className="text-signal border-b-2 border-signal pb-px"
           >
-            Request a quick audit
+            Email me
           </a>
           <a
             href="#examples"
@@ -62,58 +55,59 @@ export default function DiscordServices() {
         </div>
       </div>
 
-      {/* Offerings */}
       <section className="mb-16">
         <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-6">
-          What I can help with
+          What I work on
         </div>
         <div className="border-t border-rule">
-          {offerings.map(([title, body, price]) => (
+          {offerings.map(([title, body]) => (
             <div
               key={title}
-              className="grid md:grid-cols-[200px_1fr_120px] gap-4 py-6 border-b border-rule items-start"
+              className="grid md:grid-cols-[200px_1fr] gap-4 py-6 border-b border-rule items-start"
             >
               <div className="font-grotesk font-semibold text-[18px] text-ink">{title}</div>
               <p className="font-sans text-[15px] leading-[1.6] text-ink-muted">{body}</p>
-              <div className="font-mono text-xs tracking-[0.04em] text-signal md:text-right">
-                {price}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="examples" className="mb-16">
+        <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-6">
+          Example projects
+        </div>
+        <div className="flex flex-col border-t border-rule">
+          {examples.map((project, index) => (
+            <div
+              key={project.slug}
+              className="flex gap-5 py-5 border-b border-rule last:border-b-0 items-start"
+            >
+              <span className="font-mono text-[11px] text-signal flex-none w-6 pt-0.5">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <a
+                  href={`/projects/${project.slug}`}
+                  className="font-grotesk font-semibold text-[16px] text-ink border-b border-rule hover:text-signal hover:border-signal"
+                >
+                  {project.title}
+                </a>
+                <p className="font-sans text-[15px] leading-[1.55] text-ink-muted mt-2">
+                  {project.cardDescription}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Examples */}
-      <section id="examples" className="mb-16">
-        <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-6">
-          Example projects
-        </div>
-        <div className="flex flex-col border-t border-rule">
-          {examples.map((item, i) => (
-            <div
-              key={i}
-              className="flex gap-5 py-5 border-b border-rule last:border-b-0 items-start"
-            >
-              <span className="font-mono text-[11px] text-signal flex-none w-6 pt-0.5">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <p className="font-sans text-[15px] leading-[1.55] text-ink-muted">{item}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
       <section className="border border-rule bg-paper-panel p-7 md:p-10">
         <div className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink-faint mb-4">
-          Quick audit
+          Contact
         </div>
-        <h2 className="font-grotesk font-semibold text-[22px] md:text-[26px] tracking-[-0.01em] text-ink mb-4">
-          Want a quick Discord audit?
-        </h2>
         <p className="font-sans text-base leading-[1.6] text-ink-muted max-w-[56ch] mb-7">
-          Send me your goal, what feels messy, and what you wish your server or bot could handle
-          automatically. I&apos;ll recommend the simplest fix first.
+          If you have a Discord project in mind, send me a short note about what you are trying
+          to make.
         </p>
         <a
           href="mailto:nievesdustinl@yahoo.com"

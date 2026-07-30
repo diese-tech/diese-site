@@ -1,25 +1,38 @@
-# Diese Site
+# Diese portfolio
 
-A simple landing page for Discord automation services, gaming community tools, and portfolio projects.
+Personal portfolio for Dustin Nieves.
 
-Live site: https://diese-tech.github.io/diese-site/
+Live site: https://diese-portfolio.vercel.app/
 
-## Purpose
+## What is here
 
-This page is used as a lightweight service landing page for communities that need help with Discord setup, server cleanup, automation workflows, and small custom bot features.
+- A short background and experience section
+- Seven project pages
+- A fact record for every public project
+- A small Discord work page
+- A 3D project playground with a non-WebGL fallback
+- A local PDF resume download
 
-## Built With
+## Content rules
 
-- HTML
-- CSS
-- GitHub Pages
+Project copy is stored with its source fact record in `content/projects.ts`.
+Implemented features, unfinished work, and confirmed usage stay separate.
+Verification questions remain in the fact record and do not appear on the public
+project pages.
 
-## Featured Work
+See `docs/content-rules.md` before changing project copy.
 
-- GodForge
-- SAL Draft League
-- ForgeLens
+## Local development
 
-## Portfolio Refactor Planning
+```bash
+npm install
+npm run dev
+```
 
-The next version of this site is planned as a professional portfolio for Dustin Nieves / Diese. Architecture and product decisions for the refactor are documented in [`docs/adr`](./docs/adr), with a concise implementation brief in [`docs/portfolio-refactor-brief.md`](./docs/portfolio-refactor-brief.md).
+## Checks
+
+```bash
+npm test
+npm run lint
+npm run build
+```

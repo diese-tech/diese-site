@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme tokens — light (original ledger palette) */
+/* Theme tokens: light (original ledger palette) */
 :root {
   --paper: 246 244 239;
   --paper-panel: 243 241 234;
@@ -20,7 +20,7 @@
   --selection-fg: #f6f4ef;
 }
 
-/* Theme tokens — dark luxury (default) */
+/* Theme tokens: dark luxury (default) */
 .dark {
   --paper: 13 11 9;
   --paper-panel: 20 17 16;
