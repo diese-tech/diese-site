@@ -34,15 +34,12 @@ describe('projects content integrity', () => {
       expect(p.title.length, p.slug).toBeGreaterThan(0);
       expect(p.label.length, p.slug).toBeGreaterThan(0);
       expect(p.domain.length, p.slug).toBeGreaterThan(0);
-      expect(p.role.length, p.slug).toBeGreaterThan(0);
       expect(p.summary.length, p.slug).toBeGreaterThan(0);
       expect(p.cardDescription.length, p.slug).toBeGreaterThan(0);
       expect(p.introduction.length, p.slug).toBeGreaterThan(0);
       expect(p.stackShort.length, p.slug).toBeGreaterThan(0);
       expect(p.stack.length, p.slug).toBeGreaterThan(0);
       expect(p.features.length, p.slug).toBeGreaterThan(0);
-      expect(p.year, p.slug).toBe('2026');
-      expect(['active', 'experimental']).toContain(p.status);
       expect(p.facts.projectName).toBe(p.title);
       expect(p.facts.created).toBe('2026');
     }
@@ -50,8 +47,8 @@ describe('projects content integrity', () => {
 
   it('uses https URLs for live and repo links', () => {
     for (const p of allProjects) {
-      if (p.live) expect(p.live, p.slug).toMatch(/^https:\/\//);
-      if (p.repo) expect(p.repo, p.slug).toMatch(/^https:\/\//);
+      if (p.facts.liveUrl) expect(p.facts.liveUrl, p.slug).toMatch(/^https:\/\//);
+      expect(p.facts.repository, p.slug).toMatch(/^https:\/\//);
     }
   });
 
@@ -64,7 +61,6 @@ describe('projects content integrity', () => {
       expect(p.facts.myRole.length, p.slug).toBeGreaterThan(0);
       expect(p.facts.whoHasUsedIt.length, p.slug).toBeGreaterThan(0);
       expect(p.facts.currentStatus.length, p.slug).toBeGreaterThan(0);
-      expect(p.facts.repository).toBe(p.repo);
       expect(p.facts.factsIAmComfortableStating.length, p.slug).toBeGreaterThan(0);
       expect(p.facts.claimsThatMustNotBeMade.length, p.slug).toBeGreaterThan(0);
     }

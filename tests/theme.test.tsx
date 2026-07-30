@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ThemeScript } from '@/components/theme-script';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -50,16 +49,15 @@ describe('ThemeScript', () => {
 });
 
 describe('ThemeToggle', () => {
-  it('toggles the dark class and persists the choice', async () => {
-    const user = userEvent.setup();
+  it('toggles the dark class and persists the choice', () => {
     render(<ThemeToggle />);
     const button = screen.getByRole('button', { name: /toggle color theme/i });
 
-    await user.click(button);
+    fireEvent.click(button);
     expect(document.documentElement.classList.contains('dark')).toBe(true);
     expect(localStorage.getItem('theme')).toBe('dark');
 
-    await user.click(button);
+    fireEvent.click(button);
     expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('theme')).toBe('light');
   });

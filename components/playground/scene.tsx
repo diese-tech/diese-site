@@ -296,16 +296,6 @@ function Forklift({
 
     const t = rb.translation();
 
-    // Lightweight telemetry + teleport hook for tests/debugging
-    const w = window as unknown as Record<string, unknown>;
-    w.__fk = { x: t.x, z: t.z, fx: dir.x, fz: dir.z, wy: rb.angvel().y };
-    if (!w.__fkTeleport) {
-      w.__fkTeleport = (x: number, z: number) => {
-        rb.setTranslation({ x, y: 1, z }, true);
-        rb.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      };
-    }
-
     // Proximity: nearest landmark within radius pops the project card
     if (onLandmark) {
       const nearest = nearestLandmark(t.x, t.z);
