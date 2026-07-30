@@ -37,8 +37,8 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
 
   const next = getNextProject(slug);
   const links = [
-    ...(project.live ? [{ label: 'Live site', href: project.live }] : []),
-    { label: 'Source repository', href: project.repo },
+    ...(project.facts.liveUrl ? [{ label: 'Live site', href: project.facts.liveUrl }] : []),
+    { label: 'Source repository', href: project.facts.repository },
   ];
 
   return (
@@ -56,7 +56,7 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
         title={`project | ${project.ref}`}
         toolbar={
           <span className="hidden sm:block font-mono text-[10px] tracking-[0.08em] uppercase text-ink-faint">
-            Created {project.year} · {project.domain}
+            Created {project.facts.created} · {project.domain}
           </span>
         }
       >
@@ -81,13 +81,17 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
               <div className="font-mono text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-2">
                 My role
               </div>
-              <div className="font-grotesk font-medium text-[16px] text-ink">{project.role}</div>
+              <div className="font-grotesk font-medium text-[16px] text-ink">
+                {project.facts.myRole}
+              </div>
             </div>
             <div className="py-5 md:px-6">
               <div className="font-mono text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-2">
                 Created
               </div>
-              <div className="font-grotesk font-medium text-[16px] text-ink">{project.year}</div>
+              <div className="font-grotesk font-medium text-[16px] text-ink">
+                {project.facts.created}
+              </div>
             </div>
             <div className="py-5 md:pl-6">
               <div className="font-mono text-[9px] tracking-[0.1em] uppercase text-ink-faint mb-2">

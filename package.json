@@ -8,7 +8,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@next/third-parties": "latest",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/rapier": "^2.2.0",
@@ -23,12 +22,10 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/three": "^0.185.0",
-    "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",

@@ -16,8 +16,6 @@ const socials = [
   { label: 'Resume', href: site.resume, Icon: FileText },
 ];
 
-const listedProjects = allProjects;
-
 export default async function Home() {
   const contributions = await getContributions();
 
@@ -96,12 +94,12 @@ export default async function Home() {
               title="projects/"
               toolbar={
                 <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-ink-faint">
-                  {listedProjects.length} projects
+                  {allProjects.length} projects
                 </span>
               }
             >
               <ul>
-                {listedProjects.map((project) => (
+                {allProjects.map((project) => (
                   <li key={project.slug} className="border-b border-rule last:border-b-0">
                     <div className="group relative flex items-start gap-4 px-6 py-5 transition-colors duration-[120ms] hover:bg-paper-sunk/40">
                       <span className="font-mono text-[10px] text-ink-faint pt-1.5 w-12 shrink-0 group-hover:text-signal transition-colors duration-[120ms]">
@@ -122,24 +120,22 @@ export default async function Home() {
                           {project.cardDescription}
                         </p>
                         <div className="font-mono text-[10px] tracking-[0.06em] uppercase text-ink-faint mt-2.5">
-                          {project.stackShort} · {project.year}
+                          {project.stackShort} · {project.facts.created}
                         </div>
                       </div>
                       <div className="relative z-10 flex gap-1.5 pt-1">
-                        {project.repo && (
+                        <a
+                          href={project.facts.repository}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${project.title} on GitHub`}
+                          className="flex h-8 w-8 items-center justify-center rounded-md border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
+                        >
+                          <GithubIcon size={14} />
+                        </a>
+                        {project.facts.liveUrl && (
                           <a
-                            href={project.repo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${project.title} on GitHub`}
-                            className="flex h-8 w-8 items-center justify-center rounded-md border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
-                          >
-                            <GithubIcon size={14} />
-                          </a>
-                        )}
-                        {project.live && (
-                          <a
-                            href={project.live}
+                            href={project.facts.liveUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${project.title} live site`}

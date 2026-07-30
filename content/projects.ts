@@ -22,9 +22,6 @@ export type Project = {
   title: string;
   label: string;
   domain: string;
-  year: '2026';
-  role: string;
-  status: 'active' | 'experimental';
   stackShort: string;
   stack: string[];
   summary: string;
@@ -35,8 +32,6 @@ export type Project = {
   technicalNote: string;
   usageNote?: string;
   verifyQuestions: string[];
-  live?: string;
-  repo: string;
   facts: ProjectFactRecord;
 };
 
@@ -47,13 +42,8 @@ export const featuredProjects: Project[] = [
     title: 'SwiftDispatch',
     label: 'Dispatch workflow demo',
     domain: 'Field Service',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'Next.js · Supabase · Twilio',
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Twilio', 'Vitest'],
-    live: 'https://swiftdispatch.app',
-    repo: 'https://github.com/diese-tech/SwiftDispatch',
     summary:
       'A dispatch app I am building to follow an HVAC job from the first customer request through updates, quotes, and invoices.',
     cardDescription:
@@ -134,13 +124,8 @@ export const featuredProjects: Project[] = [
     title: 'Serpent Ascension League',
     label: 'Community league platform',
     domain: 'Community Operations',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'Next.js · Supabase · Discord',
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Discord OAuth', 'Playwright'],
-    live: 'https://sal-draft-league.vercel.app',
-    repo: 'https://github.com/diese-tech/sal-site',
     summary:
       'A home for a Smite 2 league, with the public season pages and the admin work behind them.',
     cardDescription:
@@ -218,13 +203,8 @@ export const featuredProjects: Project[] = [
     title: 'ThreeTails Booking',
     label: 'Booking workflow',
     domain: 'Hospitality',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'HTML · Supabase · Square',
     stack: ['HTML', 'CSS', 'JavaScript', 'Supabase', 'EmailJS', 'Square Sandbox'],
-    live: 'https://book.threetailscafe.com',
-    repo: 'https://github.com/diese-tech/threetails-booking',
     summary:
       'A custom cafe booking flow with capacity limits, guest changes, and separate staff and owner views.',
     cardDescription:
@@ -307,12 +287,8 @@ export const alsoBuilt: Project[] = [
     title: 'GodForge',
     label: 'Discord drafting bot',
     domain: 'Community Tools',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'Python · Discord · SQLite',
     stack: ['Python', 'discord.py', 'SQLite', 'JSON', 'pytest'],
-    repo: 'https://github.com/diese-tech/lab-godforge',
     summary:
       'A Smite 2 Discord bot for random picks, party setup, drafts, game nights, and match history.',
     cardDescription:
@@ -387,13 +363,8 @@ export const alsoBuilt: Project[] = [
     title: 'YapHub',
     label: 'Temporary voice-room bot',
     domain: 'Community Tools',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'Python · Discord · SQLite',
     stack: ['Python', 'discord.py', 'SQLite', 'pytest'],
-    live: 'https://diese-tech.github.io/lab-yaphub/',
-    repo: 'https://github.com/diese-tech/lab-yaphub',
     summary:
       'A Discord bot that gives people temporary voice rooms and cleans them up when everyone leaves.',
     cardDescription:
@@ -459,12 +430,8 @@ export const alsoBuilt: Project[] = [
     title: 'Atlas',
     label: 'Local AI and ML experiment',
     domain: 'Personal Tools',
-    year: '2026',
-    role: 'Builder',
-    status: 'experimental',
     stackShort: 'Python · Ollama · FastAPI',
     stack: ['Python', 'FastAPI', 'Ollama', 'SQLite', 'scikit-learn'],
-    repo: 'https://github.com/diese-tech/project-atlas',
     summary:
       'A pair of local experiments with Ollama chat and automated machine-learning runs.',
     cardDescription:
@@ -529,13 +496,8 @@ export const alsoBuilt: Project[] = [
     title: 'BrewLoop',
     label: 'Cafe ordering prototype',
     domain: 'Food and Hospitality',
-    year: '2026',
-    role: 'Builder',
-    status: 'active',
     stackShort: 'Next.js · Supabase · Square',
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Square', 'Playwright'],
-    live: 'https://brewloop.vercel.app',
-    repo: 'https://github.com/diese-tech/brewloop',
     summary:
       'A cafe ordering and loyalty demo with customer, staff, and owner views.',
     cardDescription:

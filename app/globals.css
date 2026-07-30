@@ -51,17 +51,6 @@ body {
   color: var(--selection-fg);
 }
 
-/* Ledger row hover */
-.ledger-row {
-  @apply transition-colors duration-[120ms] ease-out;
-}
-.ledger-row:hover {
-  @apply bg-paper-panel;
-}
-.ledger-row:hover .ledger-ref {
-  @apply text-signal;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
