@@ -1,4 +1,4 @@
-/** Landmark anchor points (x, z) — the set-pieces the forklift can visit. */
+/** Landmark anchor points (x, z) for the set pieces the forklift can visit. */
 export const LANDMARKS: { slug: string; x: number; z: number }[] = [
   { slug: 'brewloop', x: -18, z: -14 },
   { slug: 'swiftdispatch', x: 18, z: -16 },

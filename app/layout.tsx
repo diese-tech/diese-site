@@ -23,7 +23,7 @@ const googleSansCode = Google_Sans_Code({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Dustin Nieves — Software for real workflows',
+    default: 'Dustin Nieves | Software and operations',
     template: '%s | Dustin Nieves',
   },
   description: site.description,

@@ -13,34 +13,34 @@ export const experience: ExperienceEntry[] = [
     org: 'The Walt Disney Company',
     unit: 'Enterprise Technology Operations Center',
     role: 'HyperCare Operations Analyst',
-    period: '2022 — present',
+    period: 'September 2022 - present',
     mark: 'WD',
     summary:
-      'Readiness planning for major enterprise events, ITIL tooling adoption, and liaison to leadership on service impacts.',
+      'I help teams prepare for technology changes, major events, and service transitions. A lot of the work is making sure the right people know what is changing and what to do if something goes wrong.',
   },
   {
     org: 'The Walt Disney Company',
     unit: 'Disney Technology Operations Center',
     role: 'Technical Operations Center Analyst',
-    period: '2021 — 2022',
+    period: 'September 2021 - September 2022',
     mark: 'WD',
     summary:
-      'Real-time incident response for critical infrastructure across VMware, vSphere, and Active Directory environments.',
+      'I monitored applications and infrastructure, responded to alerts, and helped coordinate incidents when something broke.',
   },
   {
     org: 'United States Marine Corps',
     role: 'Senior System Administrator',
-    period: '2019 — 2021',
+    period: 'January 2019 - August 2021',
     mark: 'MC',
     summary:
-      'Ran day-to-day server environments, trained five junior administrators, zero security breaches on watch.',
+      'I managed server, network, identity, and communications systems. I also trained five junior administrators.',
   },
   {
     org: 'United States Marine Corps',
     role: 'Junior System Administrator / Data Systems Technician',
-    period: '2017 — 2019',
+    period: 'January 2017 - January 2019',
     mark: 'MC',
     summary:
-      'Supported 23 units in field deployments; built virtualized Exchange and SQL servers and secure Cisco telephony.',
+      'I supported technology and communications across 23 units. I worked with Exchange, SQL Server, VMware, Cisco systems, and the day-to-day problems that came with keeping them running.',
   },
 ];

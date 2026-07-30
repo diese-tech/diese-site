@@ -1,5 +1,5 @@
 /**
- * Brand-mark icons (GitHub, LinkedIn) as inline SVGs — lucide-react removed
+ * Brand-mark icons (GitHub, LinkedIn) as inline SVGs because lucide-react removed
  * its deprecated brand icons, so these follow the same sizing conventions
  * (24 viewBox, currentColor) to sit alongside lucide glyphs.
  */

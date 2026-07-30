@@ -14,7 +14,7 @@ export type TouchState = {
   right: boolean;
 };
 
-/* Palette (fixed hexes — the canvas doesn't participate in theming) */
+/* Palette uses fixed hexes because the canvas does not participate in theming. */
 const INK = '#1b1a17';
 const RUST = '#c96f4a';
 const CREAM = '#e4dfd3';
@@ -83,7 +83,7 @@ function makeFloorTexture(): THREE.CanvasTexture {
   const g = canvas.getContext('2d')!;
   g.fillStyle = '#16130f';
   g.fillRect(0, 0, 512, 512);
-  // Deterministic speckle (mulberry32) — stable across re-renders
+  // Deterministic speckle (mulberry32), stable across re-renders
   let seed = 0x9a4a32;
   const rand = () => {
     seed |= 0;
@@ -144,7 +144,7 @@ function Beacon({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** BrewLoop — the coffee shop, with a knockable giant coffee cup outside. */
+/** BrewLoop: the coffee shop, with a knockable giant coffee cup outside. */
 function CafeStand({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -160,7 +160,7 @@ function CafeStand({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** SwiftDispatch — delivery van. */
+/** SwiftDispatch: delivery van. */
 function DispatchVan({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -173,7 +173,7 @@ function DispatchVan({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** Serpent Ascension League — esports stage: plinth, pillars, hanging screens. */
+/** Serpent Ascension League: esports stage with a plinth, pillars, and hanging screens. */
 function LeagueArena({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -199,7 +199,7 @@ function LeagueArena({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** ThreeTails — a big low-poly cat on a plinth. */
+/** ThreeTails: a big low-poly cat on a plinth. */
 function CatTower({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -259,7 +259,7 @@ function Forklift({
     const forwardSpeed = vel.x * dir.x + vel.z * dir.z;
 
     // Grip first: pull velocity toward the heading so momentum follows the
-    // nose — this is what makes steering feel like turning rather than
+    // nose. This is what makes steering feel like turning rather than
     // rotating. Must run BEFORE the drive impulse, or setLinvel with the
     // frame-start velocity silently cancels the acceleration.
     if (Math.abs(forwardSpeed) > 0.1) {
@@ -276,7 +276,7 @@ function Forklift({
 
     const drive = (forward ? 1 : 0) - (backward ? 1 : 0);
     // The speed cap only blocks accelerating further in the direction of
-    // motion — braking/reversing input must always work (review finding)
+    // motion. Braking or reversing input must always work (review finding)
     const braking = drive * forwardSpeed < 0;
     if (drive !== 0 && (braking || Math.abs(forwardSpeed) < MAX_SPEED)) {
       const power = DRIVE_POWER * delta;
