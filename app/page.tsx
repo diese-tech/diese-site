@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, FileText, Mail } from 'lucide-react';
 import { ContributionCalendarGrid } from '@/components/contribution-calendar';
@@ -24,9 +25,15 @@ export default async function Home() {
       <div className="lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-14">
         {/* ===== IDENTITY COLUMN ===== */}
         <aside className="pt-12 pb-4 lg:py-20 lg:sticky lg:top-16 lg:self-start">
-          {/* Avatar placeholder (monogram until a headshot exists) */}
-          <div className="relative h-24 w-24 rounded-2xl border border-rule bg-gradient-to-br from-signal/80 to-void flex items-center justify-center overflow-hidden">
-            <span className="font-grotesk font-bold text-3xl text-cream tracking-tight">DN</span>
+          <div className="relative w-full max-w-[280px] aspect-[4/5] rounded-2xl border border-rule bg-paper-sunk/60 overflow-hidden">
+            <Image
+              src="/images/dustin-portrait.jpg"
+              alt="Dustin Nieves"
+              fill
+              priority
+              sizes="(min-width: 1024px) 280px, 70vw"
+              className="object-cover object-[center_22%]"
+            />
           </div>
 
           <h1 className="font-grotesk font-semibold text-[28px] tracking-[-0.015em] leading-[1.1] text-ink mt-6">
@@ -182,8 +189,14 @@ export default async function Home() {
                     key={`${entry.role}-${i}`}
                     className="flex items-start gap-4 px-6 py-5 border-b border-rule last:border-b-0"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-rule bg-paper-sunk/60 font-grotesk font-bold text-[13px] text-ink-muted">
-                      {entry.mark}
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-rule bg-paper-sunk/60 p-1.5">
+                      <Image
+                        src={entry.logo}
+                        alt={`${entry.org} logo`}
+                        width={40}
+                        height={40}
+                        className="h-full w-full object-contain"
+                      />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
