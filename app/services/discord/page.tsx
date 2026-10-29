@@ -21,7 +21,7 @@ const offerings = [
   ],
 ];
 
-const exampleSlugs = new Set(['godforge', 'yaphub', 'serpent-ascension-league']);
+const exampleSlugs = new Set(['ratatoskr', 'yaphub']);
 const examples = allProjects.filter((project) => exampleSlugs.has(project.slug));
 
 export default function DiscordServices() {
@@ -34,10 +34,22 @@ export default function DiscordServices() {
         <h1 className="font-grotesk font-semibold text-[28px] md:text-[34px] tracking-[-0.015em] leading-[1.1] text-ink mb-6 max-w-[28ch]">
           I build Discord tools for gaming communities.
         </h1>
-        <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch] mb-8">
+        <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch] mb-4">
           Most of these projects started because I wanted something specific and could not find a
           bot that handled it the way I wanted. That has included temporary voice rooms,
           randomizers, drafts, league tools, and the setup work around them.
+        </p>
+        <p className="font-sans text-base md:text-lg leading-[1.6] text-ink-muted max-w-[60ch] mb-8">
+          I also built the{' '}
+          <a
+            href="https://sal-draft-league.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink border-b border-rule hover:text-signal hover:border-signal"
+          >
+            Serpent Ascension League site
+          </a>
+          , with Discord sign-in, registration, and the admin tools behind each season.
         </p>
         <div className="flex flex-wrap gap-5 font-mono text-xs tracking-[0.06em] uppercase">
           <a

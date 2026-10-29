@@ -173,7 +173,7 @@ function DispatchVan({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** Serpent Ascension League: esports stage with a plinth, pillars, and hanging screens. */
+/** Ratatoskr: league esports stage with a plinth, pillars, and hanging screens. */
 function LeagueArena({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>

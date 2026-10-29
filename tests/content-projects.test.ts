@@ -48,7 +48,8 @@ describe('projects content integrity', () => {
   it('uses https URLs for live and repo links', () => {
     for (const p of allProjects) {
       if (p.facts.liveUrl) expect(p.facts.liveUrl, p.slug).toMatch(/^https:\/\//);
-      expect(p.facts.repository, p.slug).toMatch(/^https:\/\//);
+      if (p.facts.repository) expect(p.facts.repository, p.slug).toMatch(/^https:\/\//);
+      if (p.facts.sourceSheet) expect(p.facts.sourceSheet, p.slug).toMatch(/^https:\/\//);
     }
   });
 
@@ -85,9 +86,14 @@ describe('projects content integrity', () => {
   });
 
   it('shows a usage story only when an audience is confirmed', () => {
-    expect(allProjects.filter((p) => p.usageNote).map((p) => p.slug)).toEqual([
-      'godforge',
-      'yaphub',
-    ]);
+    for (const p of allProjects.filter((p) => p.usageNote)) {
+      expect(p.facts.whoHasUsedIt, p.slug).not.toContain('[VERIFY]');
+    }
+  });
+
+  it('links a source repository or source sheet on every project', () => {
+    for (const p of allProjects) {
+      expect(p.facts.repository ?? p.facts.sourceSheet, p.slug).toBeTruthy();
+    }
   });
 });
