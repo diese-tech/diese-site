@@ -2,7 +2,7 @@
 export const LANDMARKS: { slug: string; x: number; z: number }[] = [
   { slug: 'brewloop', x: -18, z: -14 },
   { slug: 'swiftdispatch', x: 18, z: -16 },
-  { slug: 'serpent-ascension-league', x: 19, z: 15 },
+  { slug: 'ratatoskr', x: 19, z: 15 },
   { slug: 'threetails-booking', x: -17, z: 16 },
 ];
 

@@ -38,7 +38,10 @@ export default async function ProjectPage({ params }: { params: ProjectPageParam
   const next = getNextProject(slug);
   const links = [
     ...(project.facts.liveUrl ? [{ label: 'Live site', href: project.facts.liveUrl }] : []),
-    { label: 'Source repository', href: project.facts.repository },
+    ...(project.facts.repository
+      ? [{ label: 'Source repository', href: project.facts.repository }]
+      : []),
+    ...(project.facts.sourceSheet ? [{ label: 'Source sheet', href: project.facts.sourceSheet }] : []),
   ];
 
   return (

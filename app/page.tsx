@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, FileText, Mail } from 'lucide-react';
+import { ArrowUpRight, FileSpreadsheet, FileText, Mail } from 'lucide-react';
 import { ContributionCalendarGrid } from '@/components/contribution-calendar';
 import { GithubIcon, LinkedinIcon } from '@/components/icons';
 import { MacWindow } from '@/components/mac-window';
@@ -131,15 +131,28 @@ export default async function Home() {
                         </div>
                       </div>
                       <div className="relative z-10 flex gap-1.5 pt-1">
-                        <a
-                          href={project.facts.repository}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${project.title} on GitHub`}
-                          className="flex h-8 w-8 items-center justify-center rounded-md border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
-                        >
-                          <GithubIcon size={14} />
-                        </a>
+                        {project.facts.repository && (
+                          <a
+                            href={project.facts.repository}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} on GitHub`}
+                            className="flex h-8 w-8 items-center justify-center rounded-md border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
+                          >
+                            <GithubIcon size={14} />
+                          </a>
+                        )}
+                        {project.facts.sourceSheet && (
+                          <a
+                            href={project.facts.sourceSheet}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} source sheet`}
+                            className="flex h-8 w-8 items-center justify-center rounded-md border border-rule text-ink-muted hover:text-signal hover:border-signal transition-colors duration-[120ms]"
+                          >
+                            <FileSpreadsheet size={14} />
+                          </a>
+                        )}
                         {project.facts.liveUrl && (
                           <a
                             href={project.facts.liveUrl}

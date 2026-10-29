@@ -11,7 +11,8 @@ export type ProjectFactRecord = {
   whoHasUsedIt: string;
   currentStatus: string;
   liveUrl?: string;
-  repository: string;
+  repository?: string;
+  sourceSheet?: string;
   factsIAmComfortableStating: string[];
   claimsThatMustNotBeMade: string[];
 };
@@ -119,87 +120,236 @@ export const featuredProjects: Project[] = [
     },
   },
   {
-    slug: 'serpent-ascension-league',
+    slug: 'ratatoskr',
     ref: 'R-002',
-    title: 'Serpent Ascension League',
-    label: 'Community league platform',
+    title: 'Ratatoskr',
+    label: 'League operations bot',
     domain: 'Community Operations',
-    stackShort: 'Next.js · Supabase · Discord',
-    stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Discord OAuth', 'Playwright'],
+    stackShort: 'TypeScript · Discord · SQLite',
+    stack: ['TypeScript', 'Node.js', 'discord.js', 'SQLite', 'Google Sheets API', 'Zod'],
     summary:
-      'A home for a Smite 2 league, with the public season pages and the admin work behind them.',
+      'A Discord bot that runs league operations for the Yggdrasil Smite League, from season setup to roster moves.',
     cardDescription:
-      'Schedules, standings, teams, player pages, registration, match tools, and league administration in one site.',
+      'Server setup, seasons, divisions, scouting, roster transactions, and daily roster audits that survive restarts.',
     introduction:
-      'I wanted the Serpent Ascension League to have its own place on the web. I started with the public pages for schedules, standings, teams, players, and rules. Then I added the less visible work behind them, like registration, rosters, matches, announcements, and imports. I still come back to the draft side when time allows.',
+      'Ratatoskr is the operations bot for the Yggdrasil Smite League. I built it as a favor to a friend, to help run a league for busy people. It handles the repeated league work: setting up seasons and divisions, running preseason scouting, and making approved roster moves across Discord and the league roster sheets. I built it for YSL on purpose instead of making a general bot, so every workflow follows how the league actually runs. The part I care most about is that nothing gets lost when Discord or the bot has a bad moment.',
     features: [
-      'Public home, standings, schedule, teams, players, rules, and watch pages',
-      'Discord sign-in, profile claiming, and player registration flows',
-      'Admin tools for seasons, teams, rosters, matches, announcements, and imports',
-      'Match reporting and review tools',
-      'Draft rooms and a draft board',
+      'Server, season, and division setup with plan, repair, and guarded delete steps',
+      'Preseason scouting workflows with review, publish, edit, cancel, and recovery',
+      'Approved trades, drops, pickups, and name changes applied across Discord and the roster sheets',
+      'Roster audits comparing Discord with the private and public sheets, daily and before every transaction',
+      'Workflow state saved in SQLite and reconciled after restarts or failed Discord messages',
+      'Permission checks at the moment of every change, not just when the button is shown',
     ],
     stillWorkingOn: [
-      'Finishing the draft views for players, captains, spectators, and admins',
-      'Cleaning up a few admin pieces',
+      'Moving storage behind a new layer so it can switch from SQLite to Postgres',
+      'Fuller season, match, and team management',
     ],
     technicalNote:
-      'I built the site with Next.js, TypeScript, Supabase, and PostgreSQL. The database contract and migrations live in a separate repository.',
-    verifyQuestions: [
-      '[VERIFY] Which public and admin workflows are used during the current season?',
-      '[VERIFY] How many people outside the admin team have used site registration or draft tools?',
-    ],
+      'I built Ratatoskr with TypeScript, Node.js, discord.js, SQLite, Zod, and the Google Sheets API. League rules live in plain code that is tested without Discord, and CI runs type checks, the build, and the test suite on every change.',
+    usageNote:
+      'The Yggdrasil Smite League uses Ratatoskr for its live league operations.',
+    verifyQuestions: [],
     facts: {
-      projectName: 'Serpent Ascension League',
-      projectType: 'Community league operations platform',
+      projectName: 'Ratatoskr',
+      projectType: 'Discord operations bot',
       created: '2026',
       whyIStartedIt:
-        'I wanted to build a public site and admin workspace for the Serpent Ascension League community.',
+        'I built it as a favor to a friend to help run YSL, a league for busy people, by automating repetitive league operations while keeping every change explicit and recoverable.',
       whatCurrentlyWorks: [
-        'The public site has live routes for standings, schedules, teams, players, rules, and viewing league activity.',
-        'The repository contains Discord authentication, registration, admin, match reporting, and draft surfaces.',
-        'The database contract and migrations are maintained in a separate repository.',
+        'The repository contains server provisioning, division and season lifecycle, Scout, transaction, roster audit, recovery, and help code.',
+        'Transactions update Discord and the private and public roster sheets with drift protection.',
+        'Workflow state is stored in SQLite and reconciled on startup.',
       ],
       whatIsPartiallyBuilt: [
-        'Draft-platform remediation is active.',
-        'Audience-specific production views and some database recovery gates remain unfinished.',
+        'The B5 storage migration is in progress. Production stays on SQLite until the Postgres adapter, verifier, and cutover are complete.',
       ],
       whatIsPlanned: [
-        'Complete the draft production board and audience-specific views',
-        'Remove the temporary password fallback',
+        'Fuller season lifecycle management',
+        'Team, roster, and match operations',
+        'Grounded league-rule lookup from approved canon',
       ],
       techActuallyUsed: [
-        'Next.js',
+        'TypeScript',
+        'Node.js',
+        'discord.js',
+        'SQLite',
+        'Zod',
+        'Google Sheets API',
+        'GitHub Actions',
+        'Railway',
+      ],
+      myRole: 'Builder',
+      whoHasUsedIt: 'The Yggdrasil Smite League uses it in live league operations.',
+      currentStatus: 'In live use by YSL and still in active development.',
+      repository: 'https://github.com/diese-tech/Ratatoskr',
+      factsIAmComfortableStating: [
+        'Ratatoskr is in live use by the Yggdrasil Smite League.',
+        'Ratatoskr is purpose-built for YSL, not a general plug-and-play Discord bot.',
+        'The storage migration from SQLite toward Postgres is still in progress.',
+      ],
+      claimsThatMustNotBeMade: [
+        'Ratatoskr is a general-purpose bot ready for any server.',
+        'Ratatoskr runs on Postgres in production.',
+        'Core league workflows use AI.',
+        'Ratatoskr is affiliated with or endorsed by Hi-Rez Studios.',
+      ],
+    },
+  },
+  {
+    slug: 'yaphub',
+    ref: 'R-003',
+    title: 'YapHub',
+    label: 'Temporary voice-room bot',
+    domain: 'Community Tools',
+    stackShort: 'Python · Discord · SQLite',
+    stack: ['Python', 'discord.py', 'SQLite', 'pytest', 'Railway'],
+    summary:
+      'A public Discord bot that gives people temporary voice rooms and cleans them up when everyone leaves.',
+    cardDescription:
+      'Join a lobby, get your own voice room, and control it yourself. Running in multiple community servers.',
+    introduction:
+      'YapHub does one job. Someone joins a lobby, the bot gives them a temporary voice room, and it cleans the room up when everyone leaves. It started as a VoiceMaster replacement for SAL and grew into a public bot anyone can invite, now running in several community servers. Most of my recent work has gone into reliability: making sure a room never gets lost or duplicated when Discord rate-limits the bot or it restarts mid-action.',
+    features: [
+      'Join-to-create rooms with multiple lobby profiles per server',
+      'In-room control panel for lock, hide, rename, limit, transfer, claim, permit, and kick',
+      'Works without Administrator permissions',
+      'Saved room state with restart recovery and confirmed-only cleanup',
+      'Rate-limit protection, durable cooldowns, and queued joins that survive restarts',
+      'Privacy-safe usage stats published on the public site',
+      'Load and incident-regression tests on every push',
+    ],
+    stillWorkingOn: [
+      'Moving from SQLite to Postgres so it can run more than one worker',
+      'Finishing production acceptance checks for the latest recovery release',
+    ],
+    technicalNote:
+      'I built YapHub with Python, discord.py, and SQLite, hosted on Railway. Discord events call small services for rooms, permissions, ownership, and storage. CI runs ruff and pytest, including concurrency and load tests for the room lifecycle.',
+    usageNote:
+      'YapHub runs in multiple Discord communities, including SAL and YSL, and its site shows live usage stats. It started as SAL’s replacement for VoiceMaster.',
+    verifyQuestions: [],
+    facts: {
+      projectName: 'YapHub',
+      projectType: 'Public Discord bot',
+      created: '2026',
+      whyIStartedIt:
+        'I wanted to replace VoiceMaster with a focused temporary voice-room bot for SAL.',
+      whatCurrentlyWorks: [
+        'The bot is public with an invite link and a landing page with live stats.',
+        'The repository contains setup, profiles, room lifecycle, owner controls, persistence, restart reconciliation, rate-limit protection, and telemetry code.',
+        'CI runs ruff and pytest, including load and incident-regression suites.',
+      ],
+      whatIsPartiallyBuilt: [
+        'Production acceptance for the recovery releases (SAL/YSL lifecycle checks and a 24-hour observation) is still open.',
+        'Postgres is provisioned, but the bot still runs on SQLite with a single worker.',
+      ],
+      whatIsPlanned: ['Postgres migration', 'Gateway sharding when guild count requires it'],
+      techActuallyUsed: ['Python', 'discord.py', 'SQLite', 'pytest', 'ruff', 'Railway'],
+      myRole: 'Builder',
+      whoHasUsedIt:
+        'As of October 2026 the public stats showed 10 servers, 138 unique users, and 764 rooms created, including SAL and YSL.',
+      currentStatus: 'Public and running in multiple community servers.',
+      liveUrl: 'https://diese-tech.github.io/lab-yaphub/',
+      repository: 'https://github.com/diese-tech/lab-yaphub',
+      factsIAmComfortableStating: [
+        'YapHub replaced VoiceMaster for SAL.',
+        'YapHub runs in multiple servers, including SAL and YSL.',
+        'Usage stats are published from the live bot.',
+      ],
+      claimsThatMustNotBeMade: [
+        'A specific server, user, or room count is current without checking the stats again.',
+        'YapHub runs on Postgres or multiple workers.',
+        'YapHub eliminated server clutter or admin work for real users.',
+      ],
+    },
+  },
+];
+
+export const alsoBuilt: Project[] = [
+  {
+    slug: 'smite-guides',
+    ref: 'R-004',
+    title: 'SMITE Guides',
+    label: 'Sheet-to-site publishing',
+    domain: 'Content Publishing',
+    stackShort: 'Astro · Google Sheets · Actions',
+    stack: ['Astro', 'React', 'TypeScript', 'Node.js', 'Google Sheets', 'GitHub Actions', 'Vercel'],
+    summary:
+      'A competitive SMITE 2 reference site that publishes itself from a Google Sheet.',
+    cardDescription:
+      'Edit the sheet, and a nightly sync checks it, snapshots it, and opens a reviewable update to the site.',
+    introduction:
+      'SMITE Guides is a reference site for the amateur competitive SMITE 2 community, starting with the Support guide. I wrote the guide with help from some of the top players in the amateur competitive scene, and took layout inspiration from Genetics’ SMITE 1 support guide. The content lives in a Google Sheet, and that sheet stays the source of truth. I built the sync that turns it into the site: it downloads the sheet, checks nothing is missing, saves a snapshot and every icon locally, and opens a pull request with a preview. People who edit the sheet never have to touch code. The site is in beta now.',
+    features: [
+      'Sync script that reads every guide tab, validates it, and writes a static snapshot',
+      'Icons copied locally as WebP so the site never depends on outside sites being up',
+      'Nightly and on-demand GitHub workflow that opens a preview pull request or publishes directly',
+      'A "Publish to site" menu in the sheet that starts the workflow with a limited token',
+      'Tabbed Support guide with filters, search, and deep links per god and item',
+      'Homepage scroll tour of the Conquest map with role cards and animated gods',
+    ],
+    stillWorkingOn: [
+      'Guides for the other four roles',
+      'Finalizing the visual design and logo',
+      'An interactive build crafter',
+    ],
+    technicalNote:
+      'I built it with Astro, React islands, TypeScript, and a Node sync script, deployed on Vercel. Hi-Rez artwork comes from the official SMITE Community Resource Bank and is credited on the site.',
+    usageNote:
+      'SMITE Guides is built for the amateur competitive SMITE 2 community. The Support guide was written with input from some of the top players in that scene.',
+    verifyQuestions: [],
+    facts: {
+      projectName: 'SMITE Guides',
+      projectType: 'Community reference site in beta',
+      created: '2026',
+      whyIStartedIt:
+        'I wanted a fast, readable SMITE 2 reference site that people could keep current by editing a Google Sheet.',
+      whatCurrentlyWorks: [
+        'The beta site is deployed at smite-guides.vercel.app with the Support guide.',
+        'The sheet sync, validation, icon mirroring, and nightly GitHub workflow exist and run.',
+      ],
+      whatIsPartiallyBuilt: [
+        'Only the Support role guide is available.',
+        'The design system and logo are working drafts.',
+      ],
+      whatIsPlanned: ['Carry, Jungle, Mid, and Solo guides', 'Interactive build crafter'],
+      techActuallyUsed: [
+        'Astro',
         'React',
         'TypeScript',
-        'Supabase',
-        'PostgreSQL',
-        'Discord OAuth',
-        'Vitest',
-        'Playwright',
+        'Node.js',
+        'ExcelJS',
+        'sharp',
         'GitHub Actions',
+        'Google Apps Script',
+        'Vercel',
       ],
       myRole: 'Builder',
       whoHasUsedIt:
-        'The site is deployed for the SAL community. Exact usage by players, captains, spectators, and admins is [VERIFY].',
-      currentStatus: 'Live for SAL and still growing with the league.',
-      liveUrl: 'https://sal-draft-league.vercel.app',
-      repository: 'https://github.com/diese-tech/sal-site',
+        'The public beta is built for the amateur competitive SMITE 2 community, its main audience.',
+      currentStatus: 'In public beta with the Support guide.',
+      liveUrl: 'https://smite-guides.vercel.app',
+      sourceSheet:
+        'https://docs.google.com/spreadsheets/d/1vgTM7PvM6DMqVpZkOzIjSGLkyenQuI2T7MzcSOUSMdg/edit',
       factsIAmComfortableStating: [
-        'The site is deployed and identifies an active SAL season.',
-        'The listed public, authentication, registration, admin, match, and draft code exists in the repository.',
+        'The site is in public beta for the amateur competitive SMITE 2 community.',
+        'I wrote the Support guide with help from top amateur competitive players.',
+        'The layout and display were inspired by Genetics’ SMITE 1 support guide.',
+        'The site content is synced from a Google Sheet by an automated, validated pipeline.',
+        'Hi-Rez assets are used from the official Community Resource Bank with credit.',
       ],
       claimsThatMustNotBeMade: [
-        'The league previously relied on spreadsheets or Discord messages.',
-        'Every admin or draft workflow is complete.',
-        'All league members use the site.',
-        'A test count or usage metric is current without checking it again.',
+        'I wrote the guide alone, without community input.',
+        'The layout is original rather than inspired by Genetics’ SMITE 1 support guide.',
+        'Every role guide is complete.',
+        'SMITE Guides is affiliated with or endorsed by Hi-Rez Studios.',
+        'The repository is public.',
       ],
     },
   },
   {
     slug: 'threetails-booking',
-    ref: 'R-003',
+    ref: 'R-005',
     title: 'ThreeTails Booking',
     label: 'Booking workflow',
     domain: 'Hospitality',
@@ -275,152 +425,6 @@ export const featuredProjects: Project[] = [
         'Square is processing real payments.',
         'The system is secure or ready for live operations.',
         'This was paid client work.',
-      ],
-    },
-  },
-];
-
-export const alsoBuilt: Project[] = [
-  {
-    slug: 'godforge',
-    ref: 'R-004',
-    title: 'GodForge',
-    label: 'Discord drafting bot',
-    domain: 'Community Tools',
-    stackShort: 'Python · Discord · SQLite',
-    stack: ['Python', 'discord.py', 'SQLite', 'JSON', 'pytest'],
-    summary:
-      'A Smite 2 Discord bot for random picks, party setup, drafts, game nights, and match history.',
-    cardDescription:
-      'A Discord bot that handles the moving parts around Smite 2 custom nights.',
-    introduction:
-      'GodForge started during Season 8 of Frank’s Retirement League. Players picked their opponents’ gods from a curated list the bot generated, so I built it to track those picks and hand out builds for the wacky games that season. I kept adding to it until it became a larger tool for parties, drafts, custom nights, and match history. It works on its own, with ForgeLens kept optional and off by default.',
-    features: [
-      'Random god, role, team, and item-build commands',
-      'Curated opponent god lists and per-player pick tracking',
-      'Channel-scoped sessions with reaction-based pick locking',
-      'Fearless drafts with bans, picks, undo, game advance, and JSON exports',
-      'Party setup, lobbies, queues, waitlists, and ready checks',
-      'Scheduled custom nights, team scrims, and temporary coordination rooms',
-      'Standalone match results and game-night history',
-    ],
-    stillWorkingOn: [
-      'Making setup easier for other servers',
-      'Smoothing out restarts during active sessions',
-      'Giving each server more control over its setup',
-      'Getting it ready to share with smaller Smite communities and tournaments',
-    ],
-    technicalNote:
-      'I built GodForge with Python, discord.py, SQLite, JSON files, a small Python API, and a static dashboard. Tests cover the main bot and game-night services.',
-    usageNote:
-      'GodForge was originally built for Season 8 of Frank’s Retirement League, where it handled curated god lists, per-player picks, and builds. SAL uses it for fun now. I would like to share it with smaller Smite communities and tournaments over time.',
-    verifyQuestions: [],
-    facts: {
-      projectName: 'GodForge',
-      projectType: 'Discord bot and local dashboard',
-      created: '2026',
-      whyIStartedIt:
-        'I built it for Season 8 of Frank’s Retirement League, where players picked their opponents’ gods from curated lists and used generated builds for the season’s wacky games.',
-      whatCurrentlyWorks: [
-        'The repository contains randomizer, build, session, fearless draft, party, schedule, scrim, room, result, and history code.',
-        'The bot can generate curated god lists, track picks per player, and generate builds.',
-        'GodForge works without ForgeLens. The ForgeLens adapter is optional and disabled by default.',
-      ],
-      whatIsPartiallyBuilt: [
-        'The dashboard and API bridge are release-candidate work.',
-        'Some older session and draft state remains in memory.',
-        'Live Discord and hosting checks are still required.',
-      ],
-      whatIsPlanned: [
-        'Per-server self-service configuration',
-        'Further dashboard permission and storage work',
-        'Share the bot with smaller Smite communities and tournaments',
-      ],
-      techActuallyUsed: ['Python', 'discord.py', 'SQLite', 'JSON', 'pytest', 'HTML', 'JavaScript'],
-      myRole: 'Builder',
-      whoHasUsedIt:
-        'Frank’s Retirement League used the original bot during Season 8. SAL currently uses it for fun.',
-      currentStatus: 'Used in SAL and still growing when time allows.',
-      repository: 'https://github.com/diese-tech/lab-godforge',
-      factsIAmComfortableStating: [
-        'GodForge was originally designed for Season 8 of Frank’s Retirement League.',
-        'SAL currently uses GodForge for fun.',
-        'GodForge is standalone and does not require ForgeLens.',
-        'The listed bot workflows exist in code and tests.',
-        'Economy and betting are not part of the supported product.',
-      ],
-      claimsThatMustNotBeMade: [
-        'GodForge is ready for live operations.',
-        'GodForge requires ForgeLens.',
-        'Economy, betting, wallets, odds, payouts, or ledgers are current features.',
-        'Smaller Smite communities or tournaments currently use it.',
-      ],
-    },
-  },
-  {
-    slug: 'yaphub',
-    ref: 'R-005',
-    title: 'YapHub',
-    label: 'Temporary voice-room bot',
-    domain: 'Community Tools',
-    stackShort: 'Python · Discord · SQLite',
-    stack: ['Python', 'discord.py', 'SQLite', 'pytest'],
-    summary:
-      'A Discord bot that gives people temporary voice rooms and cleans them up when everyone leaves.',
-    cardDescription:
-      'Join a lobby, get a temporary voice room, and control it without needing an admin.',
-    introduction:
-      'YapHub does one job. Someone joins the lobby, the bot gives them a temporary voice room, and it cleans the room up when everyone leaves. I originally built it to replace VoiceMaster for SAL, where it now handles the league’s temporary channels. I kept it narrow on purpose so it stays easy for people to use without an admin stepping in.',
-    features: [
-      'Setup and profile commands for one or more join lobbies',
-      'Automatic temporary room creation, member move, and cleanup',
-      'In-room controls for lock, hide, rename, limit, transfer, permit, and kick',
-      'SQLite storage for server profiles and active rooms',
-      'Restart reconciliation for stale or empty rooms',
-      'Cooldowns and central slash-command error handling',
-    ],
-    stillWorkingOn: ['Making setup easier so I can share it with smaller communities outside SAL'],
-    technicalNote:
-      'I built YapHub with Python, discord.py, SQLite, and pytest. The Discord events call smaller services that handle rooms, permissions, ownership, and storage.',
-    usageNote:
-      'YapHub replaced VoiceMaster for SAL and now handles the league’s temporary voice channels. I would like to share it with smaller communities that want the same setup as they grow.',
-    verifyQuestions: [],
-    facts: {
-      projectName: 'YapHub',
-      projectType: 'Discord bot MVP',
-      created: '2026',
-      whyIStartedIt:
-        'I wanted to replace VoiceMaster with a focused temporary voice-room bot for SAL.',
-      whatCurrentlyWorks: [
-        'The repository contains setup, profile, room lifecycle, owner controls, persistence, and restart reconciliation code.',
-        'A documentation page and Discord invite URL exist.',
-      ],
-      whatIsPartiallyBuilt: [
-        'The project is described as an MVP.',
-        'The invite adds the bot, but the running service still depends on a configured token and host.',
-      ],
-      whatIsPlanned: [
-        'Make setup easier for smaller communities',
-        'Test the bot outside SAL',
-        'Share it with smaller communities that want room to grow',
-      ],
-      techActuallyUsed: ['Python', 'discord.py', 'SQLite', 'pytest'],
-      myRole: 'Builder',
-      whoHasUsedIt:
-        'SAL uses YapHub exclusively for its temporary voice channels. It replaced VoiceMaster for the league.',
-      currentStatus: 'Used by SAL for temporary voice channels and still growing.',
-      liveUrl: 'https://diese-tech.github.io/lab-yaphub/',
-      repository: 'https://github.com/diese-tech/lab-yaphub',
-      factsIAmComfortableStating: [
-        'YapHub completely replaced VoiceMaster for SAL.',
-        'SAL currently uses YapHub for its temporary voice channels.',
-        'The listed temporary room and owner-control code exists.',
-        'The bot persists configuration and active-room records in SQLite.',
-      ],
-      claimsThatMustNotBeMade: [
-        'Communities outside SAL currently use YapHub.',
-        'The public invite proves the bot service is online.',
-        'YapHub eliminated server clutter or admin work for real users.',
       ],
     },
   },
