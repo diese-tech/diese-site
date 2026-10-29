@@ -132,7 +132,7 @@ export const featuredProjects: Project[] = [
     cardDescription:
       'Server setup, seasons, divisions, scouting, roster transactions, and daily roster audits that survive restarts.',
     introduction:
-      'Ratatoskr is the operations bot for the Yggdrasil Smite League. It handles the repeated league work: setting up seasons and divisions, running preseason scouting, and making approved roster moves across Discord and the league roster sheets. I built it for YSL on purpose instead of making a general bot, so every workflow follows how the league actually runs. The part I care most about is that nothing gets lost when Discord or the bot has a bad moment.',
+      'Ratatoskr is the operations bot for the Yggdrasil Smite League. I built it as a favor to a friend, to help run a league for busy people. It handles the repeated league work: setting up seasons and divisions, running preseason scouting, and making approved roster moves across Discord and the league roster sheets. I built it for YSL on purpose instead of making a general bot, so every workflow follows how the league actually runs. The part I care most about is that nothing gets lost when Discord or the bot has a bad moment.',
     features: [
       'Server, season, and division setup with plan, repair, and guarded delete steps',
       'Preseason scouting workflows with review, publish, edit, cancel, and recovery',
@@ -155,7 +155,7 @@ export const featuredProjects: Project[] = [
       projectType: 'Discord operations bot',
       created: '2026',
       whyIStartedIt:
-        'I wanted to automate repetitive league operations for the Yggdrasil Smite League while keeping every change explicit and recoverable.',
+        'I built it as a favor to a friend to help run YSL, a league for busy people, by automating repetitive league operations while keeping every change explicit and recoverable.',
       whatCurrentlyWorks: [
         'The repository contains server provisioning, division and season lifecycle, Scout, transaction, roster audit, recovery, and help code.',
         'Transactions update Discord and the private and public roster sheets with drift protection.',
@@ -293,7 +293,7 @@ export const alsoBuilt: Project[] = [
     cardDescription:
       'Edit the sheet, and a nightly sync checks it, snapshots it, and opens a reviewable update to the site.',
     introduction:
-      'SMITE Guides is a reference site for competitive SMITE 2, starting with the Support guide. The guide content lives in a Google Sheet, and that sheet stays the source of truth. I built the sync that turns it into the site: it downloads the sheet, checks nothing is missing, saves a snapshot and every icon locally, and opens a pull request with a preview. People who edit the sheet never have to touch code. The site is in beta now.',
+      'SMITE Guides is a reference site for the amateur competitive SMITE 2 community, starting with the Support guide. I wrote the guide with help from some of the top players in the amateur competitive scene, and took layout inspiration from Genetics’ SMITE 1 support guide. The content lives in a Google Sheet, and that sheet stays the source of truth. I built the sync that turns it into the site: it downloads the sheet, checks nothing is missing, saves a snapshot and every icon locally, and opens a pull request with a preview. People who edit the sheet never have to touch code. The site is in beta now.',
     features: [
       'Sync script that reads every guide tab, validates it, and writes a static snapshot',
       'Icons copied locally as WebP so the site never depends on outside sites being up',
@@ -309,6 +309,8 @@ export const alsoBuilt: Project[] = [
     ],
     technicalNote:
       'I built it with Astro, React islands, TypeScript, and a Node sync script, deployed on Vercel. Hi-Rez artwork comes from the official SMITE Community Resource Bank and is credited on the site.',
+    usageNote:
+      'SMITE Guides is built for the amateur competitive SMITE 2 community. The Support guide was written with input from some of the top players in that scene.',
     verifyQuestions: [],
     facts: {
       projectName: 'SMITE Guides',
@@ -337,18 +339,22 @@ export const alsoBuilt: Project[] = [
         'Vercel',
       ],
       myRole: 'Builder',
-      whoHasUsedIt: 'The beta site is public. Audience size is [VERIFY].',
+      whoHasUsedIt:
+        'The public beta is built for the amateur competitive SMITE 2 community, its main audience.',
       currentStatus: 'In public beta with the Support guide.',
       liveUrl: 'https://smite-guides.vercel.app',
       sourceSheet:
         'https://docs.google.com/spreadsheets/d/1vgTM7PvM6DMqVpZkOzIjSGLkyenQuI2T7MzcSOUSMdg/edit',
       factsIAmComfortableStating: [
-        'The site is in public beta.',
+        'The site is in public beta for the amateur competitive SMITE 2 community.',
+        'I wrote the Support guide with help from top amateur competitive players.',
+        'The layout and display were inspired by Genetics’ SMITE 1 support guide.',
         'The site content is synced from a Google Sheet by an automated, validated pipeline.',
         'Hi-Rez assets are used from the official Community Resource Bank with credit.',
       ],
       claimsThatMustNotBeMade: [
-        'I wrote all of the guide content.',
+        'I wrote the guide alone, without community input.',
+        'The layout is original rather than inspired by Genetics’ SMITE 1 support guide.',
         'Every role guide is complete.',
         'SMITE Guides is affiliated with or endorsed by Hi-Rez Studios.',
         'The repository is public.',
